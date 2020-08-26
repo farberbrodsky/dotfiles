@@ -1,0 +1,5 @@
+{
+    "coc.preferences.formatOnSaveFiletypes": ["rust"],
+    "coc.preferences.hoverTarget": "preview",
+    "eslint.autoFixOnSave": true
+}
