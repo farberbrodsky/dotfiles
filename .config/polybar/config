@@ -17,12 +17,20 @@
 ;==========================================================
 
 [colors]
-background = #44475a
+background = #eee8d5
 background-alt = #282a36
-foreground = #f8f8f2
-foreground-alt = #ff79c6
-primary = #ff79c6
-secondary = #bd93f9
+foreground = #586e75
+foreground-alt = #2aa198
+
+yellow = #b58900
+orange = #cb4b16
+red = #dc322f
+magenta = #d33682
+violet = #6c71c4
+blue = #268bd2
+cyan = #2aa198
+green = #859900
+
 alert = #bd2c40
 
 [bar/example]
@@ -38,7 +46,7 @@ foreground = ${colors.foreground}
 line-size = 2
 
 border-top-size = 2
-border-top-color = #6272a4
+border-top-color = ${colors.cyan}
 bottom = true
 
 padding-left = 0
@@ -84,20 +92,19 @@ label-mode-padding = 2.5
 label-mode-background = #e60053
 
 label-focused = %index% %icon%
-label-focused-foreground = #f8f8f2
-label-focused-background = #ff79c6
+label-focused-foreground = #fff
+label-focused-background = ${colors.cyan}
 label-focused-padding = 2
 
 label-unfocused = %index% %icon%
 label-unfocused-padding = 2
 
 label-visible = %index% %icon%
-label-visible-background = #6272a4
+label-visible-background = ${colors.green}
 label-visible-padding = 2
 
 label-urgent = %index% %icon%
-label-urgent-foreground = #000000
-label-urgent-background = #f1fa8c
+label-urgent-background = ${colors.red}
 label-urgent-padding = 2
 
 [module/xwindow]
@@ -110,15 +117,15 @@ blacklist-0 = num lock
 
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
-format-prefix-underline = ${colors.secondary}
+format-prefix-underline = ${colors.yellow}
 
 label-layout = %layout%
-label-layout-underline = ${colors.secondary}
+label-layout-underline = ${colors.yellow}
 
 label-indicator-padding = 2
 label-indicator-margin = 1
-label-indicator-background = ${colors.secondary}
-label-indicator-underline = ${colors.secondary}
+label-indicator-background = ${colors.yellow}
+label-indicator-underline = ${colors.yellow}
 
 [module/mpd]
 type = internal/mpd
@@ -157,7 +164,7 @@ type = internal/cpu
 interval = 2
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #50fa7b
+format-underline = ${colors.red}
 label = %percentage:2%%
 
 [module/memory]
@@ -165,7 +172,7 @@ type = internal/memory
 interval = 2
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #ffb86c
+format-underline = ${colors.orange}
 label = %percentage_used%%
 
 [module/wlan]
@@ -195,7 +202,7 @@ type = internal/network
 interface = ens2
 interval = 3.0
 
-format-connected-underline = #55aa55
+format-connected-underline = ${colors.green}
 format-connected-prefix = " "
 format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
@@ -218,7 +225,7 @@ time-alt = %H:%M:%S
 
 format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #bd93f9
+format-underline = ${colors.violet}
 
 label = %date% %time%
 
@@ -285,18 +292,18 @@ thermal-zone = 0
 warn-temperature = 60
 
 format = <ramp> <label>
-format-underline = #8be9fd
+format-underline = ${colors.magenta}
 format-warn = <ramp> <label-warn>
 format-warn-underline = ${self.format-underline}
 
 label = %temperature-c%
 label-warn = %temperature-c%
-label-warn-foreground = ${colors.secondary}
+label-warn-foreground = ${colors.yellow}
 
 ramp-0 = 
 ramp-1 = 
 ramp-2 = 
-ramp-foreground = ${colors.foreground-alt}
+ramp-foreground = ${colors.magenta}
 
 [settings]
 screenchange-reload = true

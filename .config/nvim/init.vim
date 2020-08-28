@@ -110,6 +110,9 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " Color scheme
 Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'lifepillar/vim-solarized8'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'rakr/vim-one'
 " Status line
 Plug 'vim-airline/vim-airline'
 let g:airline_powerline_fonts = 1
@@ -130,14 +133,17 @@ call plug#end()
 " I have colors in my terminal.
 set termguicolors
 " Dracula is the best.
-colorscheme dracula
+colorscheme solarized8
+let g:airline_theme='solarized'
+set background=light
 
 
 " AUTOCMD
 " Automatically turn on rainbow parentheses when opening a new file, this
-" doesn not include nerd tree.
-autocmd BufNewFile * :RainbowToggleOn
-autocmd BufRead    * :RainbowToggleOn
+" doesn't not include nerd tree.
+
+" autocmd BufNewFile * :RainbowToggleOn
+" autocmd BufRead    * :RainbowToggleOn
 
 " KEYBINDINGS
 " Leave terminal without a weird key combination
