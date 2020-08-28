@@ -1,8 +1,8 @@
 # class                 border  bground text    indicator child_border
-client.focused          #2aa198 #2aa198 #fdf6e3 #268bd2
-client.focused_inactive #ddd7c4 #ddd7c4 #839496 #073642
-client.unfocused        #ddd7c4 #ddd7c4 #839496 #073642
-client.urgent           #ddd7c4 #ddd7c4 #fdf6e3 #002b36
+client.focused          #2aa198 #2aa198 #fdf6e3 #2aa198
+client.focused_inactive #ddd7c4 #ddd7c4 #839496 #ddd7c4
+client.unfocused        #ddd7c4 #ddd7c4 #839496 #ddd7c4
+client.urgent           #ddd7c4 #ddd7c4 #fdf6e3 #ddd7c4
 
 # AUTOSTART
 
