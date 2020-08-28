@@ -10,7 +10,7 @@ client.urgent           #ddd7c4 #ddd7c4 #fdf6e3 #ddd7c4
 
 exec ~/.config/polybar/start.sh                      # polybar
 exec_always picom                                    # compositor
-exec feh --bg-fill ~/Pictures/Wallpapers/dracula.png # wallpaper
+exec feh --bg-scale ~/.config/i3/solarizedpixel.png  # wallpaper color
 
 
 set $mod Mod4
