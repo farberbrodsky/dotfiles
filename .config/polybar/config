@@ -18,7 +18,7 @@
 
 [colors]
 background = #eee8d5
-background-alt = #282a36
+background-alt = #fdf6e3
 foreground = #586e75
 foreground-alt = #2aa198
 
@@ -45,7 +45,7 @@ foreground = ${colors.foreground}
 
 line-size = 2
 
-border-top-size = 2
+border-top-size = 0
 border-top-color = ${colors.cyan}
 bottom = true
 
