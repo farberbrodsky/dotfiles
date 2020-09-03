@@ -85,9 +85,6 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 Plug 'easymotion/vim-easymotion'
 nmap <Space> <Plug>(easymotion-overwin-w)
 Plug 'chrisbra/colorizer'
-let g:rainbow_conf = {
-\    'guifgs': ['#ff5555', '#ffb86c', '#f1fa8c', '#50fa7b', '#8be9fd']
-\}
 
 " Ctrl-P for fuzzy file search
 Plug 'ctrlpvim/ctrlp.vim'
@@ -126,6 +123,9 @@ Plug 'ryanoasis/vim-devicons'
 " OTHER FEATURES
 
 " Rainbow parentheses
+let g:rainbow_conf = {
+\    'guifgs': ['#2aa198', '#dc322f', '#d33682', '#6c71c4', '#268bd2', '#859900']
+\}
 Plug 'luochen1990/rainbow'
 
 call plug#end()
@@ -145,9 +145,17 @@ set background=light
 " autocmd BufNewFile * :RainbowToggleOn
 " autocmd BufRead    * :RainbowToggleOn
 
-" KEYBINDINGS
+" KEYBINDINGS AND OTHER STUFF
+
 " Leave terminal without a weird key combination
 tmap <Esc> <C-\><C-n>
+" Also allow modifying windows without manually exiting terminal insert mode
+tmap <C-W> <Esc><C-W>
+" Create a vertical split for a terminal without numbering, with C-t
+nmap <C-t> :vsplit<Enter><C-l>:set nonumber<Enter>:set norelativenumber<Enter>:terminal<Enter>
+" Automatically enter terminal when it's focused
+autocmd BufWinEnter,WinEnter term://* startinsert
+
 
 " Control+f for NERDTree
 nnoremap <C-f> :NERDTreeToggle<Enter>
@@ -170,6 +178,12 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+" Also allow this in terminals
+tmap <C-H> <Esc><C-H>
+tmap <C-J> <Esc><C-L>
+tmap <C-K> <Esc><C-K>
+tmap <C-L> <Esc><C-L>
+
 
 " VIM SETTINGS
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
