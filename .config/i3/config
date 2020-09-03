@@ -172,4 +172,3 @@ bindsym $mod+Ctrl+l resize grow width 10px or 10 ppt
 #}
 
 for_window [class=".*"] border pixel 4
-
