@@ -142,8 +142,8 @@ set background=light
 " Automatically turn on rainbow parentheses when opening a new file, this
 " doesn't not include nerd tree.
 
-" autocmd BufNewFile * :RainbowToggleOn
-" autocmd BufRead    * :RainbowToggleOn
+autocmd BufNewFile * :RainbowToggleOn
+autocmd BufRead    * :RainbowToggleOn
 
 " KEYBINDINGS AND OTHER STUFF
 
