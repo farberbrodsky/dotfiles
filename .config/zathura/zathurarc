@@ -1,3 +1,6 @@
+set synctex true
+set synctex-editor-command "lyxclient -g %{input} %{line}"
+
 set recolor-darkcolor "#000000"
 set recolor-lightcolor "#fdf6e3"
 map <A-z> toggle_statusbar
