@@ -1,0 +1,54 @@
+{
+   "border": "normal",
+   "floating": "auto_off",
+   "layout": "tabbed",
+   "percent": null,
+   "type": "con",
+   "nodes": [{
+         "name": "WhatsApp",
+         "swallows": [{
+            "class": "^Chromium$",
+            "instance": "^web\\.whatsapp\\.com$"
+         }],
+         "marks": ["whatsapp"],
+         "type": "con"
+      },
+      {
+         "name": "Element",
+         "swallows": [{
+            "class": "^nheko$",
+            "instance": "^nheko$",
+            "title": "^nheko$"
+         }],
+         "marks": ["element"],
+         "type": "con"
+      },
+      {
+         "name": "Discord",
+         "swallows": [{
+            "class": "^Gtkcord3$",
+            "instance": "^gtkcord3$"
+         }],
+         "marks": ["discord"],
+         "type": "con"
+      },
+      {
+         "name": "Microsoft Teams",
+         "floating": "auto_off",
+         "swallows": [{
+            "class": "Microsoft\\ Teams\\ \\-\\ Preview$"
+         }],
+         "marks": ["teams"],
+         "type": "con"
+      },
+      {
+         "floating": "auto_off",
+         "name": "Thunderbird",
+         "swallows": [{
+            "class": "^Thunderbird$"
+         }],
+         "marks": ["thunderbird"],
+         "type": "con"
+      }
+   ]
+}
