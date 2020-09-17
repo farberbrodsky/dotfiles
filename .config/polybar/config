@@ -144,13 +144,13 @@ label-song-ellipsis = true
 type = internal/xbacklight
 
 format = <label> <bar>
-label = BL
+label = 
 
 bar-width = 10
 bar-indicator = |
-bar-indicator-foreground = #fff
+bar-indicator-foreground = #000000
 bar-fill = ─
-bar-fill-foreground = #9f78e1
+bar-fill-foreground = #000000
 bar-empty = ─
 bar-empty-foreground = ${colors.foreground-alt}
 
