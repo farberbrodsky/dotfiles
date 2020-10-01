@@ -4,50 +4,75 @@
    "layout": "tabbed",
    "percent": null,
    "type": "con",
-   "nodes": [{
+   "nodes": [
+      {
          "name": "WhatsApp",
-         "swallows": [{
-            "class": "^Chromium$",
-            "instance": "^web\\.whatsapp\\.com$"
-         }],
-         "marks": ["whatsapp"],
+         "swallows": [
+            {
+               "class": "^Chromium$",
+               "instance": "^web\\.whatsapp\\.com$"
+            }
+         ],
+         "run": "/usr/bin/chromium --app=\"https://web.whatsapp.com\"",
+         "marks": [
+            "whatsapp"
+         ],
          "type": "con"
       },
       {
          "name": "Element",
-         "swallows": [{
-            "class": "^nheko$",
-            "instance": "^nheko$",
-            "title": "^nheko$"
-         }],
-         "marks": ["element"],
+         "swallows": [
+            {
+               "class": "^nheko$",
+               "instance": "^nheko$",
+               "title": "^nheko$"
+            }
+         ],
+         "run": "nheko",
+         "marks": [
+            "element"
+         ],
          "type": "con"
       },
       {
          "name": "Discord",
-         "swallows": [{
-            "class": "^Gtkcord3$",
-            "instance": "^gtkcord3$"
-         }],
-         "marks": ["discord"],
+         "swallows": [
+            {
+               "class": "^Gtkcord3$",
+               "instance": "^gtkcord3$"
+            }
+         ],
+         "marks": [
+            "discord"
+         ],
          "type": "con"
       },
       {
          "name": "Microsoft Teams",
          "floating": "auto_off",
-         "swallows": [{
-            "class": "Microsoft\\ Teams\\ \\-\\ Preview$"
-         }],
-         "marks": ["teams"],
+         "swallows": [
+            {
+               "class": "Microsoft\\ Teams\\ \\-\\ Preview$"
+            }
+         ],
+         "run": "flatpak run com.microsoft.Teams",
+         "marks": [
+            "teams"
+         ],
          "type": "con"
       },
       {
          "floating": "auto_off",
          "name": "Thunderbird",
-         "swallows": [{
-            "class": "^Thunderbird$"
-         }],
-         "marks": ["thunderbird"],
+         "swallows": [
+            {
+               "class": "^Thunderbird$"
+            }
+         ],
+         "run": "thunderbird",
+         "marks": [
+            "thunderbird"
+         ],
          "type": "con"
       }
    ]

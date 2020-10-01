@@ -15,6 +15,9 @@ exec feh --bg-scale ~/.config/i3/solarizedpixel.png  # wallpaper color
 # Mod + U for lock
 bindsym $mod+u exec dm-tool lock
 
+# Mod + O for communications switcher
+bindsym $mod+o exec ~/.config/i3/scripts/rofi-comm/target/release/rofi-comm ~/.config/i3/workspace-2.json
+
 
 set $mod Mod4
 
