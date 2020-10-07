@@ -57,7 +57,7 @@ font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 
 modules-left = workspaces xwindow
 modules-center = mpd
-modules-right = xbacklight pulseaudio xkeyboard memory cpu wlan eth battery temperature date
+modules-right = backlight-acpi xbacklight pulseaudio xkeyboard memory cpu wlan eth battery temperature date
 
 module-margin-left = 1
 module-margin-right = 2
