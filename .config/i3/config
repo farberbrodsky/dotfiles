@@ -6,8 +6,6 @@ client.urgent           #ddd7c4 #ddd7c4 #fdf6e3 #ddd7c4
 
 # AUTOSTART
 
-
-
 exec ~/.config/polybar/start.sh                      # polybar
 exec_always picom                                    # compositor
 exec feh --bg-scale ~/.config/i3/solarizedpixel.png  # wallpaper color
@@ -18,6 +16,8 @@ bindsym $mod+u exec dm-tool lock
 # Mod + O for communications switcher
 bindsym $mod+o exec ~/.config/i3/scripts/rofi-comm/target/release/rofi-comm ~/.config/i3/workspace-2.json
 
+# Mod + Z for file manager
+bindsym $mod+z exec thunar ~/Nextcloud/
 
 set $mod Mod4
 
