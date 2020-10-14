@@ -13,23 +13,15 @@ let g:coc_global_extensions = [
     \ 'coc-rls',
     \ 'coc-python',
     \ 'coc-eslint',
-    \ 'coc-pairs'
+    \ 'coc-pairs',
+    \ 'coc-highlight'
 \ ]
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 " Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-    call CocAction('doHover')
-    " move to the preview window, make it on the right, then go back to
-    " current window
-    wincmd P
-    wincmd L
-    wincmd p
-endfunction
+nnoremap <silent> K :call CocAction('doHover')<CR>
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -84,11 +76,10 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 Plug 'easymotion/vim-easymotion'
 nmap <Space> <Plug>(easymotion-overwin-w)
-Plug 'chrisbra/colorizer'
 
 " Ctrl-P for fuzzy file search
 Plug 'ctrlpvim/ctrlp.vim'
-nnoremap <C-o> :CtrlPClearAllCaches<CR>:CtrlP<CR>
+map <C-b> :CtrlPBuffer<CR>
 set wildignore+=*/target/*,*/node_modules/*,*.so,*.swp,*.zip
 " A super cool plugin, it's like an interactive python/nodejs session but it shows
 " output on every line and you can change stuff in retrospective. Activate for
@@ -106,12 +97,11 @@ Plug 'christoomey/vim-tmux-navigator'
 " LOOK AND FEEL
 
 " Color scheme
-Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'lifepillar/vim-solarized8'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'rakr/vim-one'
 " Status line
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 let g:airline_powerline_fonts = 1
 let g:airline_section_z = ' %{strftime("%-I:%M %p")}' " Show time instead of line number
 " Indentation line
@@ -132,9 +122,9 @@ call plug#end()
 
 " I have colors in my terminal.
 set termguicolors
-" Dracula is the best.
-colorscheme solarized8
-let g:airline_theme='solarized'
+" Atom One Light is the best.
+colorscheme one
+let g:airline_theme='one'
 set background=light
 
 
