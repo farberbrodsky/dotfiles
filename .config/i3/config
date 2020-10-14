@@ -1,5 +1,5 @@
 # class                 border  bground text    indicator child_border
-client.focused          #a626a4 #a626a4 #ffffff a626a4
+client.focused          #a626a4 #a626a4 #ffffff #a626a4
 client.focused_inactive #dbdbdc #dbdbdc #839496 #a626a4
 client.unfocused        #dbdbdc #dbdbdc #839496 #a626a4
 client.urgent           #dbdbdc #dbdbdc #424242 #a626a4
@@ -8,7 +8,7 @@ client.urgent           #dbdbdc #dbdbdc #424242 #a626a4
 
 exec ~/.config/polybar/start.sh                      # polybar
 exec_always picom                                    # compositor
-exec feh --bg-scale ~/.config/i3/solarizedpixel.png  # wallpaper color
+exec_always feh --bg-scale ~/.config/i3/wallpaper.jpg       # wallpaper
 
 # Mod + U for lock
 bindsym $mod+u exec dm-tool lock
@@ -176,3 +176,4 @@ for_window [class=".*"] border pixel 4
 # load the second workspace
 exec i3-msg "workspace 2; append_layout ~/.config/i3/workspace-2.json; workspace 1"
 
+gaps inner 6
