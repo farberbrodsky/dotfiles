@@ -17,43 +17,38 @@
 ;==========================================================
 
 [colors]
-background = #eee8d5
-background-alt = #fdf6e3
-foreground = #586e75
-foreground-alt = #2aa198
+background = #eaeaeb
+background-alt = #dbdbdc
+foreground = #383a42
+foreground-alt = #4078f3
 
-yellow = #b58900
-orange = #cb4b16
-red = #dc322f
-magenta = #d33682
+yellow = #986801
+orange = #e48649
+red = #986801
+magenta = #a626a4
 violet = #6c71c4
-blue = #268bd2
-cyan = #2aa198
-green = #859900
+blue = #4078f2
+cyan = #0184bc
+green = #50a14f
 
 alert = #bd2c40
 
 [bar/example]
 monitor = ${env:MONITOR:HDMI-1}
 width = 100%
-height = 30
+height = 26
 radius = 0
 fixed-center = false
 
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-line-size = 2
-
-border-top-size = 0
-border-top-color = ${colors.cyan}
 bottom = true
 
 padding-left = 0
 padding-right = 2
 
 font-0 = Fira Code Nerd Font:pixelsize=10;1
-font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 
 modules-left = workspaces xwindow
 modules-center = mpd
@@ -88,19 +83,19 @@ ws-icon-8=9;
 ws-icon-default=
 
 label-mode = %mode%
-label-mode-padding = 2.5
+label-mode-padding = 2
 label-mode-background = #e60053
 
 label-focused = %index% %icon%
 label-focused-foreground = #fff
-label-focused-background = ${colors.cyan}
+label-focused-background = ${colors.blue}
 label-focused-padding = 2
 
 label-unfocused = %index% %icon%
 label-unfocused-padding = 2
 
 label-visible = %index% %icon%
-label-visible-background = ${colors.green}
+label-visible-background = ${colors.background-alt}
 label-visible-padding = 2
 
 label-urgent = %index% %icon%
@@ -117,15 +112,11 @@ blacklist-0 = num lock
 
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
-format-prefix-underline = ${colors.yellow}
 
 label-layout = %layout%
-label-layout-underline = ${colors.yellow}
 
 label-indicator-padding = 2
 label-indicator-margin = 1
-label-indicator-background = ${colors.yellow}
-label-indicator-underline = ${colors.yellow}
 
 [module/mpd]
 type = internal/mpd
@@ -164,7 +155,6 @@ type = internal/cpu
 interval = 2
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = ${colors.red}
 label = %percentage:2%%
 
 [module/memory]
@@ -172,7 +162,6 @@ type = internal/memory
 interval = 2
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = ${colors.orange}
 label = %percentage_used%%
 
 [module/wlan]
@@ -181,7 +170,6 @@ interface = net1
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
-format-connected-underline = #9f78e1
 label-connected = %essid%
 
 format-disconnected =
@@ -202,7 +190,6 @@ type = internal/network
 interface = ens2
 interval = 3.0
 
-format-connected-underline = ${colors.green}
 format-connected-prefix = " "
 format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
@@ -225,7 +212,6 @@ time-alt = %H:%M:%S
 
 format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = ${colors.violet}
 
 label = %date% %time%
 
@@ -260,14 +246,11 @@ adapter = ADP1
 full-at = 98
 
 format-charging = <animation-charging>  <label-charging>
-format-charging-underline = #859900
 
 format-discharging = <ramp-capacity>  <label-discharging>
-format-discharging-underline = #b58900
 
 format-full-prefix = " "
 format-full-prefix-foreground = ${colors.foreground-alt}
-format-full-underline = ${self.format-charging-underline}
 
 ramp-capacity-0 = 
 ramp-capacity-1 = 
@@ -290,9 +273,7 @@ thermal-zone = 0
 warn-temperature = 60
 
 format = <ramp> <label>
-format-underline = ${colors.magenta}
 format-warn = <ramp> <label-warn>
-format-warn-underline = ${self.format-underline}
 
 label = %temperature-c%
 label-warn = %temperature-c%
