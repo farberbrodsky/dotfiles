@@ -177,3 +177,5 @@ for_window [class=".*"] border pixel 4
 exec i3-msg "workspace 2; append_layout ~/.config/i3/workspace-2.json; workspace 1"
 
 gaps inner 6
+smart_gaps on
+smart_borders on
