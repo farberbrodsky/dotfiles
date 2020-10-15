@@ -27,6 +27,8 @@ bindsym $mod+Ctrl+greater move workspace to output right
 bindsym $mod+Ctrl+less move workspace to output left
 bindsym $mod+p exec ~/.config/i3/scripts/open-worksheet.sh
 
+# Disable borders for Albert
+for_window [class="albert"] border pixel 0
 
 
 # Font for window titles. Will also be used by the bar unless a different font
