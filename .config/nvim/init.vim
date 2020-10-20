@@ -28,7 +28,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
 
 " Symbol renaming
-nmap <leader>r <Plug>(coc-rename)
+nmap <silent> <C-r> <Plug>(coc-rename)
 
 " Shorter updatetime
 set updatetime=300
