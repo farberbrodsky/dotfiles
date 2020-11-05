@@ -7,7 +7,7 @@ client.urgent           #dbdbdc #dbdbdc #424242 #a626a4
 # AUTOSTART
 
 exec ~/.config/polybar/start.sh                      # polybar
-exec_always picom                                    # compositor
+exec_always compton                                  # compositor
 exec_always feh --bg-scale ~/.config/i3/wallpaper.jpg       # wallpaper
 
 # Mod + U for lock
