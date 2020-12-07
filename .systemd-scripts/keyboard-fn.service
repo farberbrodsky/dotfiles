@@ -1,0 +1,11 @@
+[Unit]
+Description=Keyboard FN keys
+After=display-manager.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/misha/Nextcloud/hotkeys.pyw
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

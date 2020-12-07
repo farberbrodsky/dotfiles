@@ -1,0 +1,14 @@
+[Unit]
+Description=Flatpak update after 5 minutes online
+After=network.target
+
+[Timer]
+OnBootSec=5min
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/flatpak update --noninteractive -y
+Restart=never
+
+[Install]
+WantedBy=multi-user.target
