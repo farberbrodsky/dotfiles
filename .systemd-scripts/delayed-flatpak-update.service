@@ -1,0 +1,9 @@
+[Unit]
+Description=Flatpak update after 5 minutes online
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/flatpak update --noninteractive -y
+
+[Install]
+WantedBy=multi-user.target
