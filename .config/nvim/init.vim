@@ -75,7 +75,7 @@ Plug 'scrooloose/nerdtree'
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 Plug 'easymotion/vim-easymotion'
-nmap <Space> <Plug>(easymotion-overwin-w)
+nmap <Space> <Plug>(easymotion-overwin-f)
 
 " Ctrl-P for fuzzy file search
 Plug 'ctrlpvim/ctrlp.vim'
