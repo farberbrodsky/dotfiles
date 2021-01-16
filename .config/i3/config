@@ -1,14 +1,14 @@
 # class                 border  bground text    indicator child_border
-client.focused          #a626a4 #a626a4 #ffffff #a626a4
-client.focused_inactive #dbdbdc #dbdbdc #839496 #a626a4
-client.unfocused        #dbdbdc #dbdbdc #839496 #a626a4
-client.urgent           #dbdbdc #dbdbdc #424242 #a626a4
+client.focused          #f6a800 #f6a800 #ffffff #f6a800
+client.focused_inactive #dbdbdc #dbdbdc #839496 #f6a800
+client.unfocused        #dbdbdc #dbdbdc #839496 #f6a800
+client.urgent           #dbdbdc #dbdbdc #424242 #f6a800
 
 # AUTOSTART
 
 exec ~/.config/polybar/start.sh                      # polybar
 exec_always compton                                  # compositor
-exec_always feh --bg-scale ~/.config/i3/wallpaper.jpg       # wallpaper
+exec_always feh --bg-fill ~/.config/i3/wallpaper.jpg       # wallpaper
 
 # Mod + U for lock
 bindsym $mod+u exec dm-tool lock
@@ -179,6 +179,6 @@ for_window [class="albert"] border pixel 0
 # load the second workspace
 exec i3-msg "workspace 2; append_layout ~/.config/i3/workspace-2.json; workspace 1"
 
-gaps inner 6
+gaps inner 8
 smart_gaps on
 smart_borders on
