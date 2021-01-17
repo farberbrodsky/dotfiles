@@ -1,14 +1,14 @@
-# class                 border  bground text    indicator child_border
-client.focused          #f6a800 #f6a800 #ffffff #f6a800
-client.focused_inactive #dbdbdc #dbdbdc #839496 #f6a800
-client.unfocused        #dbdbdc #dbdbdc #839496 #f6a800
-client.urgent           #dbdbdc #dbdbdc #424242 #f6a800
+# class                 border    bground   text      indicator child_border
+client.focused          #ff5e9fff #ff5e9fff #ffffffff #f6a80000
+client.focused_inactive #dbdbdc00 #dbdbdc00 #839496ff #f6a80000
+client.unfocused        #dbdbdc00 #dbdbdc00 #839496ff #f6a80000
+client.urgent           #dbdbdc00 #dbdbdc00 #424242ff #f6a80000
 
 # AUTOSTART
 
-exec ~/.config/polybar/start.sh                      # polybar
-exec_always compton                                  # compositor
-exec_always feh --bg-fill ~/.config/i3/wallpaper.jpg       # wallpaper
+exec ~/.config/polybar/start.sh                       # polybar
+exec compton                                          # compositor
+exec_always feh --bg-fill ~/.config/i3/wallpaper.jpg  # wallpaper
 
 # Mod + U for lock
 bindsym $mod+u exec dm-tool lock
@@ -170,12 +170,11 @@ bindsym $mod+Ctrl+j resize grow height 10px or 10 ppt
 bindsym $mod+Ctrl+k resize shrink height 10px or 10 ppt
 bindsym $mod+Ctrl+l resize grow width 10px or 10 ppt
 
-for_window [class=".*"] border pixel 4
+for_window [class=".*"] border pixel 5
 
 # Disable borders for Albert
 for_window [class="albert"] border pixel 0
 
-
-gaps inner 8
+gaps inner 0
 smart_gaps on
 smart_borders on
