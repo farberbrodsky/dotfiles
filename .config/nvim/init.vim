@@ -56,6 +56,11 @@ imap <C-l> <Plug>(coc-snippets-expand)
 " Fugitive, git with :Git
 Plug 'tpope/vim-fugitive'
 
+" Easy align - e.g. ga= aligns by =
+Plug 'junegunn/vim-easy-align'
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+
 " Features for preview window for documentation opened with K
 Plug 'skywind3000/vim-preview'
 noremap <m-j> :PreviewScroll +1<cr>
@@ -75,7 +80,20 @@ Plug 'scrooloose/nerdtree'
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 Plug 'easymotion/vim-easymotion'
-nmap <Space> <Plug>(easymotion-overwin-f)
+nmap <Space> <Plug>(easymotion-bd-w)
+let g:easymotion#is_active = 0
+function! EasyMotionCoc() abort
+  if EasyMotion#is_active()
+    let g:easymotion#is_active = 1
+    CocDisable
+  else
+    if g:easymotion#is_active == 1
+      let g:easymotion#is_active = 0
+      CocEnable
+    endif
+  endif
+endfunction
+autocmd TextChanged,CursorMoved * call EasyMotionCoc()
 
 " Ctrl-P for fuzzy file search
 Plug 'ctrlpvim/ctrlp.vim'
@@ -91,13 +109,9 @@ Plug 'metakirby5/codi.vim'
 " Remember to do vim -S Session.vim later
 Plug 'tpope/vim-obsession'
 
-" Vim + Tmux navigation
-Plug 'christoomey/vim-tmux-navigator'
-
 " LOOK AND FEEL
 
 " Color scheme
-Plug 'lifepillar/vim-solarized8'
 Plug 'rakr/vim-one'
 " Status line
 Plug 'vim-airline/vim-airline'
