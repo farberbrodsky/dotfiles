@@ -9,21 +9,31 @@ then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 export PATH
+export PATH="/usr/lib64/qt5/bin/:$PATH"
 
 # User specific aliases and functions
 source "$HOME/.cargo/env"
 set -o vi
 export EDITOR=nvim
 
-export PS1="\e[0;37m"     # color gray
-export PS1=$PS1"\A "      # time
-export PS1=$PS1"\e[0;32m" # color green
-export PS1=$PS1"\u"       # username
-export PS1=$PS1"@\h"      # @hostname
-export PS1=$PS1"\e[0;34m" # color blue
-export PS1=$PS1" \w"      # working directory
-export PS1=$PS1" ● "      #
-export PS1=$PS1"\e[0m"    # reset color
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+CYAN=$(tput setaf 6)
+GRAY=$(tput setaf 245)
+NORMAL=$(tput sgr0)
+
+PS1="\[${GRAY}\]"        # gray
+PS1="$PS1\A "            # time
+PS1="$PS1\[${GREEN}\]"   # green
+PS1="$PS1\u"             # username
+PS1="$PS1\[${YELLOW}\]@" # yellow @
+PS1="$PS1\[${CYAN}\]"    # cyan
+PS1="$PS1\h"             # hostname
+PS1="$PS1\[${BLUE}\]"    # blue
+PS1="$PS1 \w"            # working directory
+PS1="$PS1 ● "            # dot
+PS1="$PS1\[${NORMAL}\]"  # reset color
 
 run() {
     lang=$(echo $1 | cut -f 2 -d ".");
@@ -43,6 +53,12 @@ run() {
 }
 
 inpep() { autopep8 --in-place --aggressive --aggressive $1; }
+
+runvm()     { cd $HOME/disposable-vm/ && TERM=xterm ./run_clone.sh;    }
+runmainvm() { cd $HOME/disposable-vm/ && TERM=xterm ./run_main_ssh.sh; }
+
 if test -f "/usr/bin/lsd"; then
     alias ls="lsd"
 fi
+
+eval "$(starship init bash)"
