@@ -6,6 +6,7 @@ client.urgent           #dbdbdc00 #dbdbdc00 #424242ff #f6a80000
 
 # AUTOSTART
 
+exec lxqt-config-monitor -l
 exec ~/.config/polybar/start.sh                       # polybar
 exec compton                                          # compositor
 exec_always feh --bg-fill ~/.config/i3/wallpaper.jpg  # wallpaper
@@ -109,7 +110,7 @@ bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+f floating toggle
 
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
@@ -174,7 +175,3 @@ for_window [class=".*"] border pixel 5
 
 # Disable borders for Albert
 for_window [class="albert"] border pixel 0
-
-gaps inner 0
-smart_gaps on
-smart_borders on
