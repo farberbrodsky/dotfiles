@@ -28,7 +28,7 @@ def finalize():
 
 def get_date():
     now = datetime.datetime.now()
-    return f"{now.year}-{now.month}-{now.day}"
+    return f"{now.year}-{str(now.month).zfill(2)}-{str(now.day).zfill(2)}"
 
 
 def make_item(query_str):
