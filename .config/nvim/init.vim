@@ -2,6 +2,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 " CODE COMPLETION
 
+let g:coc_disable_startup_warning = 1
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 let g:coc_global_extensions = [
@@ -11,7 +12,7 @@ let g:coc_global_extensions = [
     \ 'coc-snippets',
     \ 'coc-tsserver',
     \ 'coc-rls',
-    \ 'coc-python',
+    \ 'coc-jedi',
     \ 'coc-eslint',
     \ 'coc-pairs',
     \ 'coc-highlight'
@@ -195,6 +196,7 @@ set incsearch ignorecase smartcase hlsearch
 set number
 set relativenumber
 set timeoutlen=100
+set mouse=a
 
 " This unsets the "last search pattern" register by hitting return
 nnoremap <CR> :noh<CR>
