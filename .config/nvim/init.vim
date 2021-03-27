@@ -31,6 +31,9 @@ nmap <silent> gr <Plug>(coc-references)
 " Symbol renaming
 nmap <silent> <C-r> <Plug>(coc-rename)
 
+" Document outline
+nmap <silent> go :CocList outline<CR>
+
 " Shorter updatetime
 set updatetime=300
 
