@@ -1,0 +1,4 @@
+mod4 + y; {0,1,2,3,4,5,6,7,8,9}
+	/home/misha/scripts/clipboard_copy.sh {0,1,2,3,4,5,6,7,8,9}
+mod4 + p; {0,1,2,3,4,5,6,7,8,9}
+	/home/misha/scripts/clipboard_paste.sh {0,1,2,3,4,5,6,7,8,9}
