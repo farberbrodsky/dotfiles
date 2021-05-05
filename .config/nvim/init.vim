@@ -14,9 +14,10 @@ let g:coc_global_extensions = [
     \ 'coc-rls',
     \ 'coc-jedi',
     \ 'coc-eslint',
-    \ 'coc-pairs',
     \ 'coc-highlight'
 \ ]
+
+Plug 'jiangmiao/auto-pairs'
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
