@@ -1,15 +1,15 @@
-# class                 border    bground   text      indicator child_border
-client.focused          #ff5e9fff #ff5e9fff #ffffffff #f6a80000
-client.focused_inactive #dbdbdc00 #dbdbdc00 #839496ff #f6a80000
-client.unfocused        #dbdbdc00 #dbdbdc00 #839496ff #f6a80000
-client.urgent           #dbdbdc00 #dbdbdc00 #424242ff #f6a80000
+# class                 border  bground text    indicator child_border
+client.focused          #ff5e9f #ff5e9f #ffffff #aa3e9f
+client.focused_inactive #dbdbdc #dbdbdc #839496 #dbdbdc
+client.unfocused        #dbdbdc #dbdbdc #839496 #dbdbdc
+client.urgent           #dbdbdc #dbdbdc #424242 #dbdbdc
 
 # AUTOSTART
 
 exec lxqt-config-monitor -l
-exec ~/.config/polybar/start.sh                       # polybar
-exec compton                                          # compositor
-exec_always feh --bg-fill ~/.config/i3/wallpaper.jpg  # wallpaper
+exec sleep 3 && ~/.config/polybar/start.sh                # polybar
+exec sleep 3 && feh --bg-fill ~/.config/i3/wallpaper.jpg  # wallpaper
+exec compton                                              # compositor
 
 # Mod + U for lock
 bindsym $mod+u exec dm-tool lock
@@ -26,7 +26,6 @@ set $mod Mod4
 # CUSTOM BINDINGS
 bindsym $mod+Ctrl+greater move workspace to output right
 bindsym $mod+Ctrl+less move workspace to output left
-bindsym $mod+p exec ~/.config/i3/scripts/open-worksheet.sh
 
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -175,3 +174,5 @@ for_window [class=".*"] border pixel 5
 
 # Disable borders for Albert
 for_window [class="albert"] border pixel 0
+for_window [class="albert"] floating enable
+for_window [class="yakuake"] floating enable
