@@ -8,8 +8,7 @@ if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
 then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
-export PATH
-export PATH="/usr/lib64/qt5/bin/:$PATH"
+export PATH="$PATH:/home/misha/scripts/"
 
 # User specific aliases and functions
 if test -f "$HOME/.cargo/env"; then
@@ -78,3 +77,7 @@ if test -f "/usr/bin/lsd"; then
 fi
 
 eval "$(starship init bash)"
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
