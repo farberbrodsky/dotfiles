@@ -12,7 +12,9 @@ export PATH
 export PATH="/usr/lib64/qt5/bin/:$PATH"
 
 # User specific aliases and functions
-source "$HOME/.cargo/env"
+if test -f "$HOME/.cargo/env"; then
+    source "$HOME/.cargo/env"
+fi
 set -o vi
 export EDITOR=nvim
 
