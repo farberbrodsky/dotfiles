@@ -127,6 +127,8 @@ let g:airline_section_z = ' %{strftime("%-I:%M %p")}' " Show time instead of lin
 Plug 'yggdroot/indentline'
 " Icons for NERDTree and airline
 Plug 'ryanoasis/vim-devicons'
+" Highlight the word under the cursor
+Plug 'rrethy/vim-illuminate'
 
 
 " OTHER FEATURES
