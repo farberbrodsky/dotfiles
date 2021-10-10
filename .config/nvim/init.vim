@@ -9,7 +9,6 @@ let g:coc_global_extensions = [
     \ 'coc-css',
     \ 'coc-html',
     \ 'coc-json',
-    \ 'coc-snippets',
     \ 'coc-tsserver',
     \ 'coc-rls',
     \ 'coc-jedi',
@@ -73,7 +72,7 @@ noremap <m-k> :PreviewScroll -1<cr>
 
 " Indentation detection with :DetectIndent
 Plug 'roryokane/detectindent'
-let g:detectindent_preferred_indent = 2
+let g:detectindent_preferred_indent = 4
 augroup DetectIndent
    autocmd!
    autocmd BufReadPost *  DetectIndent
@@ -84,21 +83,21 @@ Plug 'scrooloose/nerdtree'
 " close nerdtree if it's the last window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-Plug 'easymotion/vim-easymotion'
-nmap <Space> <Plug>(easymotion-bd-w)
-let g:easymotion#is_active = 0
-function! EasyMotionCoc() abort
-  if EasyMotion#is_active()
-    let g:easymotion#is_active = 1
-    CocDisable
-  else
-    if g:easymotion#is_active == 1
-      let g:easymotion#is_active = 0
-      CocEnable
-    endif
-  endif
-endfunction
-autocmd TextChanged,CursorMoved * call EasyMotionCoc()
+Plug 'phaazon/hop.nvim'
+" nmap <Space> <Plug>(easymotion-bd-w)
+" let g:easymotion#is_active = 0
+" function! EasyMotionCoc() abort
+"   if EasyMotion#is_active()
+"     let g:easymotion#is_active = 1
+"     CocDisable
+"   else
+"     if g:easymotion#is_active == 1
+"       let g:easymotion#is_active = 0
+"       CocEnable
+"     endif
+"   endif
+" endfunction
+" autocmd TextChanged,CursorMoved * call EasyMotionCoc()
 
 " Ctrl-P for fuzzy file search
 Plug 'ctrlpvim/ctrlp.vim'
@@ -163,7 +162,7 @@ tmap <Esc> <C-\><C-n>
 " Also allow modifying windows without manually exiting terminal insert mode
 tmap <C-W> <Esc><C-W>
 " Create a vertical split for a terminal without numbering, with C-t
-nmap <C-t> :vsplit<Enter><C-l>:set nonumber<Enter>:set norelativenumber<Enter>:terminal<Enter>
+nmap <C-t> :vsplit<Enter><C-l>:set nonumber<Enter>:set norelativenumber<Enter>:terminal<Enter>i
 " Automatically enter terminal when it's focused
 autocmd BufWinEnter,WinEnter term://* startinsert
 
@@ -206,3 +205,5 @@ set mouse=a
 
 " This unsets the "last search pattern" register by hitting return
 nnoremap <CR> :noh<CR>
+
+source ~/.config/nvim/notinit.lua
