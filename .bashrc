@@ -16,25 +16,7 @@ if test -f "$HOME/.cargo/env"; then
 fi
 set -o vi
 export EDITOR=nvim
-
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-CYAN=$(tput setaf 6)
-GRAY=$(tput setaf 245)
-NORMAL=$(tput sgr0)
-
-PS1="\[${GRAY}\]"        # gray
-PS1="$PS1\A "            # time
-PS1="$PS1\[${GREEN}\]"   # green
-PS1="$PS1\u"             # username
-PS1="$PS1\[${YELLOW}\]@" # yellow @
-PS1="$PS1\[${CYAN}\]"    # cyan
-PS1="$PS1\h"             # hostname
-PS1="$PS1\[${BLUE}\]"    # blue
-PS1="$PS1 \w"            # working directory
-PS1="$PS1 ● "            # dot
-PS1="$PS1\[${NORMAL}\]"  # reset color
+export MANPAGER="nvim +Man! -c ':IndentLinesDisable'"
 
 run() {
     lang=$(echo $1 | cut -f 2 -d ".");
@@ -78,6 +60,5 @@ fi
 
 eval "$(starship init bash)"
 
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
