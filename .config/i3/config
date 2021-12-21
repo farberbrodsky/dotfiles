@@ -8,8 +8,10 @@ client.urgent           #dbdbdc #dbdbdc #424242 #dbdbdc
 
 exec lxqt-config-monitor -l
 exec sleep 3 && ~/.config/polybar/start.sh                # polybar
-exec sleep 3 && feh --bg-fill ~/.config/i3/wallpaper.jpg  # wallpaper
+exec sleep 2 && feh --bg-fill ~/.config/i3/wallpaper.jpg  # wallpaper
 exec compton                                              # compositor
+
+exec sxhkd
 
 # Mod + U for lock
 bindsym $mod+u exec dm-tool lock
@@ -19,6 +21,9 @@ bindsym $mod+o exec ~/.config/i3/scripts/rofi-comm/target/release/rofi-comm ~/.c
 
 # Mod + Z for file manager
 bindsym $mod+z exec thunar ~/Nextcloud/
+
+# Mod + B for firefox
+bindsym $mod+b exec firefox
 
 set $mod Mod4
 

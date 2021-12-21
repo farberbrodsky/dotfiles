@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ~/odyssey/
+cd ~/Nextcloud/odyssey/
 
 ls -Rt
 

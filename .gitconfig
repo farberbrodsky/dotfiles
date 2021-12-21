@@ -1,0 +1,10 @@
+[user]
+	email = misha@farberbrodsky.com
+	name = Misha Farber Brodsky
+[core]
+	editor = nvim
+	excludesfile = /home/misha/.gitignore
+[color]
+	ui = true
+[init]
+	defaultBranch = main
