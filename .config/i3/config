@@ -11,13 +11,8 @@ exec sleep 3 && ~/.config/polybar/start.sh                # polybar
 exec sleep 2 && feh --bg-fill ~/.config/i3/wallpaper.jpg  # wallpaper
 exec compton                                              # compositor
 
-exec sxhkd
-
 # Mod + U for lock
 bindsym $mod+u exec dm-tool lock
-
-# Mod + O for communications switcher
-bindsym $mod+o exec ~/.config/i3/scripts/rofi-comm/target/release/rofi-comm ~/.config/i3/workspace-2.json
 
 # Mod + Z for file manager
 bindsym $mod+z exec thunar ~/Nextcloud/
@@ -181,3 +176,7 @@ for_window [class=".*"] border pixel 5
 for_window [class="albert"] border pixel 0
 for_window [class="albert"] floating enable
 for_window [class="yakuake"] floating enable
+
+exec_always --no-startup-id kitti3 -n asfijoioo -p CT -s 0.7 0.3
+bindsym $mod+t nop asfijoioo
+for_window [instance="asfijoioo"] floating enable, border pixel 3, move absolute
