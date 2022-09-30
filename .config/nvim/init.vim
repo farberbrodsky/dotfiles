@@ -192,4 +192,6 @@ set mouse=a
 " This unsets the "last search pattern" register by hitting return
 nnoremap <silent> <CR> :noh<CR>
 
+let g:markdown_fenced_languages = ["c", "python"]
+
 source ~/.config/nvim/notinit.lua
