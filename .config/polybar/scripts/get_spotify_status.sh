@@ -69,7 +69,7 @@ else
         echo "$STATUS"
     else
         update_hooks "$PARENT_BAR_PID" 1
-        playerctl --player=$PLAYER metadata --format "$FORMAT"
+        playerctl --player=$PLAYER metadata --format "$FORMAT" | sed -e "s/[^[:space:]a-zA-Z0-9\-]//g"
     fi
 fi
 
