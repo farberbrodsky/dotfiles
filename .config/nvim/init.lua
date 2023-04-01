@@ -1,14 +1,78 @@
 vim.call('plug#begin', '~/.config/nvim/plugged')
 
+-- All the important keybindings in one place
+local CREATE_TERMINAL = '<C-t>'
+local TOGGLE_NERDTREE = '<C-f>'
+
+local GOTO_DEFINITION      = 'gd'
+local GOTO_TYPE_DEFINITION = 'gy'
+local GOTO_IMPLEMENTATION  = 'gi'
+local GOTO_REFERENCES      = 'gr'
+
+local COC_OUTLINE              = 'go'
+local COC_WORKSPACE_SYMBOLS    = 'gt'
+local COC_INCOMING_HIERARCHY   = 'ghi'
+local COC_OUTGOING_HIERARCHY   = 'gho'
+local COC_SWITCH_SOURCE_HEADER = 'gs'
+local COC_SHOW_DOCS            = 'K'
+local COC_RENAME               = '<leader>rn'
+local COC_FORMAT_SELECTED      = '<leader>f'
+local COC_QUICK_FIX            = '<leader>qf'
+local COC_CODE_LENS            = '<leader>cl'
+local SCROLL_PREVIEW_DOWN      = '<M-j>'
+local SCROLL_PREVIEW_UP        = '<M-k>'
+
+local SELECT_CLASS_OUTER     = 'ac'
+local SELECT_CLASS_INNER     = 'ic'
+local SELECT_FUNCTION_OUTER  = 'af'
+local SELECT_FUNCTION_INNER  = 'if'
+local SELECT_PARAMETER_OUTER = 'aa'
+local SELECT_PARAMETER_INNER = 'ia'
+local SELECT_HUNK_INNER      = 'ih'
+
+local NEXT_DIAGNOSTIC = ']g'
+local PREV_DIAGNOSTIC = '[g'
+local NEXT_PARAMETER  = ']a'
+local PREV_PARAMETER  = '[a'
+local NEXT_FUNCTION   = ']f'
+local PREV_FUNCTION   = '[f'
+local NEXT_CHANGE     = ']c'
+local PREV_CHANGE     = '[c'
+
+local APPEND_NEXT_ARGUMENT = 'a]a'
+local APPEND_PREV_ARGUMENT = 'a[a'
+
+
+local GITSIGNS_PREVIEW_HUNK_INLINE = '<leader>hp'
+local GITSIGNS_TOGGLE_DELETED      = '<leader>td'
+
+local GITSIGNS_DIFF_PREV_HEAD = '<leader>hD'
+local GITSIGNS_DIFF_HEAD      = '<leader>hd'
+
+local GITSIGNS_CURRENT_LINE_BLAME        = '<leader>hb'
+local GITSIGNS_TOGGLE_CURRENT_LINE_BLAME = '<leader>tb'
+
+local GITSIGNS_STAGE_HUNK      = '<leader>hs'
+local GITSIGNS_UNDO_STAGE_HUNK = '<leader>hu'
+local GITSIGNS_RESET_HUNK      = '<leader>hr'
+
+local GITSIGNS_STAGE_BUFFER = '<leader>hS'
+local GITSIGNS_RESET_BUFFER = '<leader>hR'
+
+local ALIGN_RIGHT = 'gl'
+local ALIGN_LEFT  = 'gL'
+
+local CTRLP_BUFFER = '<C-b>'
+
 -- Helper functions
-function for_hjkl(f)
-    hjkl = {'h', 'j', 'k', 'l'}
+local function for_hjkl(f)
+    local hjkl = {'h', 'j', 'k', 'l'}
     for i = 1, #hjkl do
         f(hjkl[i])
     end
 end
 
-function add_plugin(s)
+local function add_plugin(s)
     vim.cmd ('Plug \'' .. s .. '\'')
 end
 
@@ -16,15 +80,18 @@ end
 add_plugin 'rakr/vim-one'                    -- Atom One Light theme
 add_plugin 'vim-airline/vim-airline'         -- Airline status line
 add_plugin 'vim-airline/vim-airline-themes'  -- ...
+add_plugin 'tpope/vim-surround'              -- Classic surround.vim
 add_plugin 'yggdroot/indentline'             -- Indentation line
 add_plugin 'roryokane/detectindent'          -- Detect indentation
 add_plugin 'ryanoasis/vim-devicons'          -- Icons for NERDTree and airline
--- add_plugin 'rrethy/vim-illuminate'          -- Highlight the word under the cursor
 add_plugin 'tpope/vim-fugitive'              -- Fugitive, git with :Git
+add_plugin 'lewis6991/gitsigns.nvim'         -- Show git changed lines and blame etc.
+add_plugin 'windwp/nvim-autopairs'           -- Autopairs with treesitter
 add_plugin 'scrooloose/nerdtree'             -- The tree file viewer sidebar
 add_plugin 'tpope/vim-obsession'             -- Save session automatically by using :Obsess - then, nvim -S Session.vim
 add_plugin 'phaazon/hop.nvim'                -- Like EasyMotion
 add_plugin 'ctrlpvim/ctrlp.vim'              -- Ctrl-P for fuzzy file search
+add_plugin 'tommcdo/vim-lion'                -- lion.vim - align text by some character
 
 vim.cmd "Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}" -- Treesitter
 add_plugin 'nvim-treesitter/nvim-treesitter-textobjects'              -- Treesitter text objects
@@ -40,7 +107,7 @@ for_hjkl(function (c) vim.keymap.set('n', '<C-' .. c .. '>', '<C-w><C-' .. c .. 
 
 -- Terminal bindings
 -- Create a vertical split for a terminal without numbering, with <C-t>
-vim.keymap.set('n', '<C-t>', ':vsplit<Enter><C-l>:set nonumber<Enter>:set norelativenumber<Enter>:terminal<Enter>i', { silent = true, remap=true })
+vim.keymap.set('n', CREATE_TERMINAL, ':vsplit<Enter><C-l>:set nonumber<Enter>:set norelativenumber<Enter>:terminal<Enter>i', { silent = true, remap=true })
 -- Automatically enter terminal when focused
 vim.api.nvim_create_autocmd({'BufWinEnter', 'WinEnter'}, {
     pattern = {'term://*'},
@@ -71,10 +138,10 @@ vim.opt.smarttab = true
 vim.opt.autoindent = true
 
 -- Copy and paste from system clipboard
-vim.keymap.set('v', '<C-c>', '"+y', { silent = true })
-vim.keymap.set('v', '<C-x>', '"+c', { silent = true })
+vim.keymap.set('v', '<C-c>', '"+y',       { silent = true })
+vim.keymap.set('v', '<C-x>', '"+c',       { silent = true })
 vim.keymap.set('v', '<C-v>', 'c<Esc>"+p', { silent = true })
-vim.keymap.set('n', '<C-v>', '"+p', { silent = true })
+vim.keymap.set('n', '<C-v>', '"+p',       { silent = true })
 vim.keymap.set('i', '<C-v>', '<Esc>"+pa', { silent = true })
 
 -- Misc vim settings
@@ -102,7 +169,6 @@ vim.opt.updatetime = 300
 -- diagnostics appeared/became resolved
 vim.opt.signcolumn = "yes"
 
-local keyset = vim.keymap.set
 -- Autocomplete
 function _G.check_back_space()
     local col = vim.fn.col('.') - 1
@@ -115,28 +181,27 @@ end
 -- NOTE: Use command ':verbose imap <tab>' to make sure Tab is not mapped by
 -- other plugins before putting this into your config
 local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
-keyset("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
-keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
+vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
+vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 
 -- Make <CR> to accept selected completion item or notify coc.nvim to format
 -- <C-g>u breaks current undo, please make your own choice
-keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
-
+vim.keymap.set("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
 -- Use <c-j> to trigger snippets
--- keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
+-- vim.keymap.set("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
 -- Use <c-space> to trigger completion
-keyset("i", "<c-space>", "coc#refresh()", {silent = true, expr = true})
+vim.keymap.set("i", "<c-space>", "coc#refresh()", {silent = true, expr = true})
 
 -- Use `[g` and `]g` to navigate diagnostics
 -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
-keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
-keyset("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
+vim.keymap.set("n", PREV_DIAGNOSTIC, "<Plug>(coc-diagnostic-prev)", {silent = true})
+vim.keymap.set("n", NEXT_DIAGNOSTIC, "<Plug>(coc-diagnostic-next)", {silent = true})
 
 -- GoTo code navigation
-keyset("n", "gd", "<Plug>(coc-definition)", {silent = true})
-keyset("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
-keyset("n", "gi", "<Plug>(coc-implementation)", {silent = true})
-keyset("n", "gr", "<Plug>(coc-references)", {silent = true})
+vim.keymap.set("n", GOTO_DEFINITION,      "<Plug>(coc-definition)",      {silent = true})
+vim.keymap.set("n", GOTO_TYPE_DEFINITION, "<Plug>(coc-type-definition)", {silent = true})
+vim.keymap.set("n", GOTO_IMPLEMENTATION,  "<Plug>(coc-implementation)",  {silent = true})
+vim.keymap.set("n", GOTO_REFERENCES,      "<Plug>(coc-references)",      {silent = true})
 
 
 -- Use K to show documentation in preview window
@@ -150,7 +215,7 @@ function _G.show_docs()
         vim.api.nvim_command('!' .. vim.o.keywordprg .. ' ' .. cw)
     end
 end
-keyset("n", "K", '<CMD>lua _G.show_docs()<CR>', {silent = true})
+vim.keymap.set("n", COC_SHOW_DOCS, '<CMD>lua _G.show_docs()<CR>', {silent = true})
 
 
 -- Highlight the symbol and its references on a CursorHold event(cursor is idle)
@@ -163,13 +228,10 @@ vim.api.nvim_create_autocmd("CursorHold", {
 
 
 -- Symbol renaming
-keyset("n", "<leader>rn", "<Plug>(coc-rename)", {silent = true})
-
+vim.keymap.set("n", COC_RENAME, "<Plug>(coc-rename)", {silent = true})
 
 -- Formatting selected code
-keyset("x", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
-keyset("n", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
-
+vim.keymap.set({"n", "x"}, COC_FORMAT_SELECTED, "<Plug>(coc-format-selected)", {silent = true})
 
 -- Setup formatexpr specified filetype(s)
 vim.api.nvim_create_autocmd("FileType", {
@@ -190,37 +252,37 @@ vim.api.nvim_create_autocmd("User", {
 -- Apply codeAction to the selected region
 -- Example: `<leader>aap` for current paragraph
 local opts = {silent = true, nowait = true}
-keyset("x", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
-keyset("n", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
+-- vim.keymap.set("x", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
+-- vim.keymap.set("n", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
 
 -- Remap keys for apply code actions at the cursor position.
-keyset("n", "<leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
+-- vim.keymap.set("n", "<leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
 -- Remap keys for apply code actions affect whole buffer.
-keyset("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
+-- vim.keymap.set("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
 -- Remap keys for applying codeActions to the current buffer
-keyset("n", "<leader>ac", "<Plug>(coc-codeaction)", opts)
+-- vim.keymap.set("n", "<leader>ac", "<Plug>(coc-codeaction)", opts)
 -- Apply the most preferred quickfix action on the current line.
-keyset("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
+vim.keymap.set("n", COC_QUICK_FIX, "<Plug>(coc-fix-current)", opts)
 
 -- Remap keys for apply refactor code actions.
-keyset("n", "<leader>re", "<Plug>(coc-codeaction-refactor)", { silent = true })
-keyset("x", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
-keyset("n", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
+-- vim.keymap.set("n", "<leader>re", "<Plug>(coc-codeaction-refactor)", { silent = true })
+-- vim.keymap.set("x", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
+-- vim.keymap.set("n", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
 
 -- Run the Code Lens actions on the current line
-keyset("n", "<leader>cl", "<Plug>(coc-codelens-action)", opts)
+vim.keymap.set("n", COC_CODE_LENS, "<Plug>(coc-codelens-action)", opts)
 
 -- Remap <M-j> and <M-k> to scroll float windows/popups
 ---@diagnostic disable-next-line: redefined-local
 local opts = {silent = true, nowait = true, expr = true}
-keyset("n", "<M-j>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<M-j>"', opts)
-keyset("n", "<M-k>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<M-k>"', opts)
-keyset("i", "<M-j>",
+vim.keymap.set("n", SCROLL_PREVIEW_DOWN, 'coc#float#has_scroll() ? coc#float#scroll(1) : ' .. SCROLL_PREVIEW_DOWN, opts)
+vim.keymap.set("n", SCROLL_PREVIEW_UP, 'coc#float#has_scroll() ? coc#float#scroll(0) : ' .. SCROLL_PREVIEW_UP, opts)
+vim.keymap.set("i", SCROLL_PREVIEW_DOWN,
        'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
-keyset("i", "<M-k>",
+vim.keymap.set("i", SCROLL_PREVIEW_UP,
        'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
-keyset("v", "<M-j>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<M-j>"', opts)
-keyset("v", "<M-k>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<M-k>"', opts)
+vim.keymap.set("v", SCROLL_PREVIEW_DOWN, 'coc#float#has_scroll() ? coc#float#scroll(1) : ' .. SCROLL_PREVIEW_DOWN, opts)
+vim.keymap.set("v", SCROLL_PREVIEW_UP, 'coc#float#has_scroll() ? coc#float#scroll(0) : ' .. SCROLL_PREVIEW_UP, opts)
 
 -- Add `:Format` command to format current buffer
 vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
@@ -240,30 +302,34 @@ vim.g["airline#extensions#coc#show_coc_status"] = 1
 ---@diagnostic disable-next-line: redefined-local
 local opts = {silent = true, nowait = true}
 -- Show all diagnostics
--- keyset("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
+-- vim.keymap.set("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
 -- Manage extensions
--- keyset("n", "<space>e", ":<C-u>CocList extensions<cr>", opts)
+-- vim.keymap.set("n", "<space>e", ":<C-u>CocList extensions<cr>", opts)
 -- Show commands
--- keyset("n", "<space>c", ":<C-u>CocList commands<cr>", opts)
+-- vim.keymap.set("n", "<space>c", ":<C-u>CocList commands<cr>", opts)
 -- Find symbol of current document
-keyset("n", "go", ":<C-u>CocList outline<cr>", opts)
+vim.keymap.set("n", COC_OUTLINE,           ":<C-u>CocList outline<cr>",    opts)
 -- Search workspace symbols
-keyset("n", "gt", ":<C-u>CocList -I symbols<cr>", opts)
+vim.keymap.set("n", COC_WORKSPACE_SYMBOLS, ":<C-u>CocList -I symbols<cr>", opts)
 -- Do default action for next item
--- keyset("n", "<space>j", ":<C-u>CocNext<cr>", opts)
+-- vim.keymap.set("n", "<space>j", ":<C-u>CocNext<cr>", opts)
 -- Do default action for previous item
--- keyset("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
+-- vim.keymap.set("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
 -- Resume latest coc list
--- keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
+-- vim.keymap.set("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
 
 -- call hierarchy
-keyset("n", "ghi", ":CocCommand document.showIncomingCalls<cr>", opts)
-keyset("n", "gho", ":CocCommand document.showOutgoingCalls<cr>", opts)
+vim.keymap.set("n", COC_INCOMING_HIERARCHY, ":CocCommand document.showIncomingCalls<cr>", opts)
+vim.keymap.set("n", COC_OUTGOING_HIERARCHY, ":CocCommand document.showOutgoingCalls<cr>", opts)
+
+-- switch source/header
+vim.keymap.set("n", COC_SWITCH_SOURCE_HEADER, function() vim.api.nvim_command('CocCommand clangd.switchSourceHeader') end, opts)
 
 
 -- Treesitter
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "python", "bash", "lua", "json", "make", "vim", "help", "query" },
+  ensure_installed = { "c", "cpp", "python", "bash", "lua", "javascript", "latex", "markdown",
+                       "json", "ini", "yaml", "cmake", "make", "vim", "help", "query" },
 
   highlight = {
     enable = true,
@@ -278,12 +344,12 @@ require'nvim-treesitter.configs'.setup {
       lookahead = true,
 
       keymaps = {
-        ["ac"] = "@class.outer",
-        ["ic"] = "@class.inner",
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        ["aa"] = "@parameter.outer",
-        ["ia"] = "@parameter.inner"
+        [SELECT_CLASS_OUTER]     = "@class.outer",
+        [SELECT_CLASS_INNER]     = "@class.inner",
+        [SELECT_FUNCTION_OUTER]  = "@function.outer",
+        [SELECT_FUNCTION_INNER]  = "@function.inner",
+        [SELECT_PARAMETER_OUTER] = "@parameter.outer",
+        [SELECT_PARAMETER_INNER] = "@parameter.inner"
       },
 
       selection_modes = {
@@ -296,22 +362,22 @@ require'nvim-treesitter.configs'.setup {
       enable = true,
       set_jumps = true,  -- whether to set jumps in the jumplist
       goto_next_start = {
-        ["]a"] = "@parameter.inner",
+        [NEXT_PARAMETER] = "@parameter.inner",
       },
       goto_next_end = {
       },
       goto_previous_start = {
-        ["[a"] = "@parameter.inner",
+        [PREV_PARAMETER] = "@parameter.inner",
       },
       goto_previous_end = {
       },
 
       -- either start or end, whichever is closer
       goto_next = {
-        ["]f"] = "@function.outer"
+        [NEXT_FUNCTION] = "@function.outer"
       },
       goto_previous = {
-        ["[f"] = "@function.outer"
+        [PREV_FUNCTION] = "@function.outer"
       }
     }
   },
@@ -326,6 +392,22 @@ require'nvim-treesitter.configs'.setup {
     strategy = require('ts-rainbow').strategy.global,
   }
 }
+
+-- Append Argument - go to the end of the argument, insert a comma in insert mode
+vim.keymap.set('n', APPEND_NEXT_ARGUMENT, 'via<Esc>a, ', { remap = true, silent = true })
+vim.keymap.set('n', APPEND_PREV_ARGUMENT, 'viao<Esc>i, <Left><Left>', { remap = true, silent = true })
+
+-- Autopairs with treesitter config
+require('nvim-autopairs').setup({
+  check_ts = true,
+  ts_config = {
+    lua    = {'string'}, -- not for string in lua
+    cpp    = {'string'},
+    c      = {'string'},
+    python = {'string'}
+  }
+})
+
 
 -- Atom One Light theme
 vim.cmd 'colorscheme one'
@@ -353,13 +435,13 @@ vim.api.nvim_set_keymap('n', ' ', '<cmd>lua require\'hop\'.hint_words()<cr>', {}
 require'hop'.setup { create_hl_autocmd = false }
 
 -- <C-f> for NERDTree
-vim.keymap.set('n', '<C-f>', function() vim.api.nvim_command('NERDTreeToggle') end)
+vim.keymap.set('n', TOGGLE_NERDTREE, function() vim.api.nvim_command('NERDTreeToggle') end)
 -- close nerdtree if it's the last window
 vim.cmd 'autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif'
 
 -- Ctrl-P
 vim.cmd "set wildignore+=*/target/*,*/node_modules/*,*.so,*.swp,*.zip"
-vim.keymap.set('', '<C-b>', function() vim.api.nvim_command('CtrlPBuffer') end, { silent = true })
+vim.keymap.set('', CTRLP_BUFFER, function() vim.api.nvim_command('CtrlPBuffer') end, { silent = true })
 
 -- Automatic indentation detection
 vim.cmd [[
@@ -369,3 +451,89 @@ vim.cmd [[
      autocmd BufReadPost *  DetectIndent
   augroup END
 ]]
+
+-- lion.vim
+vim.g.lion_map_right = ALIGN_RIGHT
+vim.g.lion_map_left  = ALIGN_LEFT
+
+-- gitsigns.nvim
+require('gitsigns').setup {
+  signs = {
+    add          = { text = '│' },
+    change       = { text = '│' },
+    delete       = { text = '_' },
+    topdelete    = { text = '‾' },
+    changedelete = { text = '~' },
+    untracked    = { text = '┆' },
+  },
+  signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+  numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+  linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
+  word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+  watch_gitdir = {
+    interval = 1000,
+    follow_files = true
+  },
+  attach_to_untracked = true,
+  current_line_blame  = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+  current_line_blame_opts = {
+    virt_text         = true,
+    virt_text_pos     = 'eol', -- 'eol' | 'overlay' | 'right_align'
+    delay             = 1000,
+    ignore_whitespace = false,
+  },
+  current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+  sign_priority    = 6,
+  update_debounce  = 100,
+  status_formatter = nil, -- Use default
+  max_file_length  = 40000, -- Disable if file is longer than this (in lines)
+  preview_config = {
+    -- Options passed to nvim_open_win
+    border = 'single',
+    style = 'minimal',
+    relative = 'cursor',
+    row = 0,
+    col = 1
+  },
+  yadm = {
+    enable = false
+  },
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map('n', NEXT_CHANGE, function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    map('n', PREV_CHANGE, function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    -- Actions
+    map({'n', 'v'}, GITSIGNS_STAGE_HUNK, ':Gitsigns stage_hunk<CR>', { silent = true })
+    map({'n', 'v'}, GITSIGNS_RESET_HUNK, ':Gitsigns reset_hunk<CR>', { silent = true })
+    map('n', GITSIGNS_STAGE_BUFFER,              gs.stage_buffer)
+    map('n', GITSIGNS_UNDO_STAGE_HUNK,           gs.undo_stage_hunk)
+    map('n', GITSIGNS_RESET_BUFFER,              gs.reset_buffer)
+    map('n', GITSIGNS_PREVIEW_HUNK_INLINE,       gs.preview_hunk_inline)
+    map('n', GITSIGNS_CURRENT_LINE_BLAME,        function() gs.blame_line{full=true} end)
+    map('n', GITSIGNS_TOGGLE_CURRENT_LINE_BLAME, gs.toggle_current_line_blame)
+    map('n', GITSIGNS_DIFF_HEAD,                 gs.diffthis)                     -- diff from HEAD
+    map('n', GITSIGNS_DIFF_PREV_HEAD,            function() gs.diffthis('~') end) -- diff from HEAD^
+    map('n', GITSIGNS_TOGGLE_DELETED,            gs.toggle_deleted)
+
+    -- Text object
+    map({'o', 'x'}, SELECT_HUNK_INNER, ':<C-U>Gitsigns select_hunk<CR>')
+  end
+}
