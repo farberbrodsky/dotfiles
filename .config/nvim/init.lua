@@ -14,6 +14,7 @@ local COC_WORKSPACE_SYMBOLS    = 'gt'
 local COC_INCOMING_HIERARCHY   = 'ghi'
 local COC_OUTGOING_HIERARCHY   = 'gho'
 local COC_SWITCH_SOURCE_HEADER = 'gs'
+
 local COC_SHOW_DOCS            = 'K'
 local COC_RENAME               = '<leader>rn'
 local COC_FORMAT_SELECTED      = '<leader>f'
@@ -29,6 +30,9 @@ local SELECT_FUNCTION_INNER  = 'if'
 local SELECT_PARAMETER_OUTER = 'aa'
 local SELECT_PARAMETER_INNER = 'ia'
 local SELECT_HUNK_INNER      = 'ih'
+
+local SELECT_TEXTSUBJECT_SMART   = '.'  -- upper block, might be like a or i
+local TEXTSUBJECT_PREV_SELECTION = ','  -- go back to a smaller selection with ,
 
 local NEXT_DIAGNOSTIC = ']g'
 local PREV_DIAGNOSTIC = '[g'
@@ -59,8 +63,11 @@ local GITSIGNS_RESET_HUNK      = '<leader>hr'
 local GITSIGNS_STAGE_BUFFER = '<leader>hS'
 local GITSIGNS_RESET_BUFFER = '<leader>hR'
 
+
 local ALIGN_RIGHT = 'gl'
 local ALIGN_LEFT  = 'gL'
+
+local TCOMMENT_LEADER = 'gc'  -- gc - toggle comment, gcc - toggle comment for line, etc. See: :h tcomment.txt
 
 local CTRLP_BUFFER = '<C-b>'
 
@@ -92,9 +99,11 @@ add_plugin 'tpope/vim-obsession'             -- Save session automatically by us
 add_plugin 'phaazon/hop.nvim'                -- Like EasyMotion
 add_plugin 'ctrlpvim/ctrlp.vim'              -- Ctrl-P for fuzzy file search
 add_plugin 'tommcdo/vim-lion'                -- lion.vim - align text by some character
+add_plugin 'tomtom/tcomment_vim'             -- tcomment - comment stuff out
 
 vim.cmd "Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}" -- Treesitter
 add_plugin 'nvim-treesitter/nvim-treesitter-textobjects'              -- Treesitter text objects
+add_plugin 'RRethy/nvim-treesitter-textsubjects'                      -- Treesitter text subjects
 add_plugin 'HiPhish/nvim-ts-rainbow2'                                 -- Treesitter rainbow parentheses
 
 vim.cmd "Plug 'neoclide/coc.nvim', {'branch': 'release'}"             -- CoC
@@ -136,6 +145,7 @@ vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.smarttab = true
 vim.opt.autoindent = true
+vim.opt.timeoutlen = 180  -- i can type combinations fast
 
 -- Copy and paste from system clipboard
 vim.keymap.set('v', '<C-c>', '"+y',       { silent = true })
@@ -382,6 +392,14 @@ require'nvim-treesitter.configs'.setup {
     }
   },
 
+  textsubjects = {
+    enable = true,
+    prev_selection = TEXTSUBJECT_PREV_SELECTION,
+    keymaps = {
+      [SELECT_TEXTSUBJECT_SMART] = 'textsubjects-smart'
+    }
+  },
+
   rainbow = {
     enable = true,
     -- list of languages you want to disable the plugin for
@@ -392,6 +410,16 @@ require'nvim-treesitter.configs'.setup {
     strategy = require('ts-rainbow').strategy.global,
   }
 }
+
+-- Make these repeatable with ; and ,
+local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
+vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
+-- Keep f,F,t,T repeatable
+vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f)
+vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F)
+vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
+vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
 
 -- Append Argument - go to the end of the argument, insert a comma in insert mode
 vim.keymap.set('n', APPEND_NEXT_ARGUMENT, 'via<Esc>a, ', { remap = true, silent = true })
@@ -456,6 +484,9 @@ vim.cmd [[
 vim.g.lion_map_right = ALIGN_RIGHT
 vim.g.lion_map_left  = ALIGN_LEFT
 
+-- tcomment.vim
+vim.g.tcomment_opleader1 = TCOMMENT_LEADER
+
 -- gitsigns.nvim
 require('gitsigns').setup {
   signs = {
@@ -507,18 +538,21 @@ require('gitsigns').setup {
       vim.keymap.set(mode, l, r, opts)
     end
 
-    -- Navigation
-    map('n', NEXT_CHANGE, function()
+    -- Navigation (for repeating with ; and , - use treesitter textobjects)
+    local function next_hunk()
       if vim.wo.diff then return ']c' end
       vim.schedule(function() gs.next_hunk() end)
       return '<Ignore>'
-    end, {expr=true})
-
-    map('n', PREV_CHANGE, function()
+    end
+    local function prev_hunk()
       if vim.wo.diff then return '[c' end
       vim.schedule(function() gs.prev_hunk() end)
       return '<Ignore>'
-    end, {expr=true})
+    end
+
+    local next_hunk_repeat, prev_hunk_repeat = ts_repeat_move.make_repeatable_move_pair(gs.next_hunk, gs.prev_hunk)
+    map({'n', 'x', 'o'}, NEXT_CHANGE, next_hunk_repeat, {expr = true})
+    map({'n', 'x', 'o'}, PREV_CHANGE, prev_hunk_repeat, {expr = true})
 
     -- Actions
     map({'n', 'v'}, GITSIGNS_STAGE_HUNK, ':Gitsigns stage_hunk<CR>', { silent = true })
