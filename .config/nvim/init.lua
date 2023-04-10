@@ -85,6 +85,8 @@ end
 
 -- List of plugins
 add_plugin 'rakr/vim-one'                    -- Atom One Light theme
+add_plugin 'tjdevries/colorbuddy.vim'        -- Atom One Light theme
+add_plugin 'Th3Whit3Wolf/onebuddy'           -- Atom One Light theme
 add_plugin 'vim-airline/vim-airline'         -- Airline status line
 add_plugin 'vim-airline/vim-airline-themes'  -- ...
 add_plugin 'tpope/vim-surround'              -- Classic surround.vim
@@ -438,19 +440,7 @@ require('nvim-autopairs').setup({
 
 
 -- Atom One Light theme
-vim.cmd 'colorscheme one'
-vim.opt.background = 'light'
-
--- Rainbow colors
-vim.cmd [[
-  highlight TSRainbowRed    guifg=#dd5a58
-  highlight TSRainbowYellow guifg=#bfbc07
-  highlight TSRainbowBlue   guifg=#268bd2
-  highlight TSRainbowOrange guifg=#e2972d
-  highlight TSRainbowGreen  guifg=#859900
-  highlight TSRainbowViolet guifg=#6c71c4
-  highlight TSRainbowCyan   guifg=#2aa198
-]]
+require('colorbuddy').colorscheme('onebuddy', true)
 
 -- Airline
 vim.g.airline_theme = 'one'
