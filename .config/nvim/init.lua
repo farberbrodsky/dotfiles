@@ -3,6 +3,7 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
 -- All the important keybindings in one place
 local CREATE_TERMINAL = '<C-t>'
 local TOGGLE_NERDTREE = '<C-f>'
+local TOGGLE_LINE_NUMBERS = '<C-n>'
 
 local GOTO_DEFINITION      = 'gd'
 local GOTO_TYPE_DEFINITION = 'gy'
@@ -79,34 +80,35 @@ local function for_hjkl(f)
     end
 end
 
-local function add_plugin(s)
-    vim.cmd ('Plug \'' .. s .. '\'')
+local function add_plugin(s, extra)
+    if extra == nil then
+        vim.cmd('Plug \'' .. s .. '\'')
+    else
+        vim.cmd('Plug \'' .. s .. '\', ' .. extra)
+    end
 end
 
 -- List of plugins
-add_plugin 'rakr/vim-one'                    -- Atom One Light theme
-add_plugin 'tjdevries/colorbuddy.vim'        -- Atom One Light theme
-add_plugin 'Th3Whit3Wolf/onebuddy'           -- Atom One Light theme
-add_plugin 'vim-airline/vim-airline'         -- Airline status line
-add_plugin 'vim-airline/vim-airline-themes'  -- ...
-add_plugin 'tpope/vim-surround'              -- Classic surround.vim
-add_plugin 'yggdroot/indentline'             -- Indentation line
-add_plugin 'roryokane/detectindent'          -- Detect indentation
-add_plugin 'ryanoasis/vim-devicons'          -- Icons for NERDTree and airline
-add_plugin 'tpope/vim-fugitive'              -- Fugitive, git with :Git
-add_plugin 'lewis6991/gitsigns.nvim'         -- Show git changed lines and blame etc.
-add_plugin 'windwp/nvim-autopairs'           -- Autopairs with treesitter
-add_plugin 'scrooloose/nerdtree'             -- The tree file viewer sidebar
-add_plugin 'tpope/vim-obsession'             -- Save session automatically by using :Obsess - then, nvim -S Session.vim
-add_plugin 'phaazon/hop.nvim'                -- Like EasyMotion
-add_plugin 'ctrlpvim/ctrlp.vim'              -- Ctrl-P for fuzzy file search
-add_plugin 'tommcdo/vim-lion'                -- lion.vim - align text by some character
-add_plugin 'tomtom/tcomment_vim'             -- tcomment - comment stuff out
+add_plugin('catppuccin/nvim', "{'as': 'catppuccin'}")  -- Catppuccin theme
+add_plugin 'vim-airline/vim-airline'                   -- Airline status line
+add_plugin 'tpope/vim-surround'                        -- Classic surround.vim
+add_plugin 'lukas-reineke/indent-blankline.nvim'       -- Indentation blanklines
+add_plugin 'roryokane/detectindent'                    -- Detect indentation
+add_plugin 'ryanoasis/vim-devicons'                    -- Icons for NERDTree and airline
+add_plugin 'tpope/vim-fugitive'                        -- Fugitive, git with :Git
+add_plugin 'lewis6991/gitsigns.nvim'                   -- Show git changed lines and blame etc.
+add_plugin 'windwp/nvim-autopairs'                     -- Autopairs with treesitter
+add_plugin 'scrooloose/nerdtree'                       -- The tree file viewer sidebar
+add_plugin 'tpope/vim-obsession'                       -- Save session automatically by using :Obsess - then, nvim -S Session.vim
+add_plugin 'phaazon/hop.nvim'                          -- Like EasyMotion
+add_plugin 'ctrlpvim/ctrlp.vim'                        -- Ctrl-P for fuzzy file search
+add_plugin 'tommcdo/vim-lion'                          -- lion.vim - align text by some character
+add_plugin 'tomtom/tcomment_vim'                       -- tcomment - comment stuff out
 
-vim.cmd "Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}" -- Treesitter
-add_plugin 'nvim-treesitter/nvim-treesitter-textobjects'              -- Treesitter text objects
-add_plugin 'RRethy/nvim-treesitter-textsubjects'                      -- Treesitter text subjects
-add_plugin 'HiPhish/nvim-ts-rainbow2'                                 -- Treesitter rainbow parentheses
+add_plugin('nvim-treesitter/nvim-treesitter',"{'do': ':TSUpdate'}") -- Treesitter
+add_plugin 'nvim-treesitter/nvim-treesitter-textobjects'            -- Treesitter text objects
+add_plugin 'RRethy/nvim-treesitter-textsubjects'                    -- Treesitter text subjects
+add_plugin 'HiPhish/nvim-ts-rainbow2'                               -- Treesitter rainbow parentheses
 
 vim.cmd "Plug 'neoclide/coc.nvim', {'branch': 'release'}"             -- CoC
 
@@ -140,6 +142,14 @@ vim.opt.incsearch = true
 -- Unset the "last search pattern" register by hitting return
 vim.keymap.set('n', '<CR>', function() vim.api.nvim_command('let @/ = ""') end)
 
+-- Toggle line numbers
+vim.keymap.set('n', TOGGLE_LINE_NUMBERS, function()
+  vim.cmd [[
+    set invrelativenumber
+    set invnumber
+  ]]
+end)
+
 -- Tab vim settings
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
@@ -161,7 +171,8 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.mouse = 'a'
 vim.opt.termguicolors = true
-vim.g.markdown_fenced_languages = {'c', 'python'}
+vim.g.markdown_fenced_languages = {'c', 'cpp', 'python'}
+vim.opt.scrolloff = 10
 
 
 -- Plugins
@@ -440,13 +451,12 @@ require('nvim-autopairs').setup({
 
 
 -- Atom One Light theme
-require('colorbuddy').colorscheme('onebuddy', true)
+vim.o.background = 'light'
+vim.cmd 'colorscheme catppuccin-latte'
 
 -- Airline
-vim.g.airline_theme = 'one'
 vim.g.airline_powerline_fonts = 1
--- Show time instead of line number
-vim.g.airline_section_z = ' %{strftime("%-I:%M %p")}'
+vim.g.airline_section_z = '%4l'
 
 -- hop.nvim
 vim.api.nvim_set_keymap('n', ' ', '<cmd>lua require\'hop\'.hint_words()<cr>', {})
@@ -461,14 +471,12 @@ vim.cmd 'autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NER
 vim.cmd "set wildignore+=*/target/*,*/node_modules/*,*.so,*.swp,*.zip"
 vim.keymap.set('', CTRLP_BUFFER, function() vim.api.nvim_command('CtrlPBuffer') end, { silent = true })
 
--- Automatic indentation detection
-vim.cmd [[
-  let g:detectindent_preferred_indent = 4
-  augroup DetectIndent
-     autocmd!
-     autocmd BufReadPost *  DetectIndent
-  augroup END
-]]
+-- indent blanklines
+require("indent_blankline").setup {
+    show_trailing_blankline_indent = false
+}
+vim.g.indent_blankline_use_treesitter = true
+vim.cmd 'highlight IndentBlanklineChar guifg=#e2e2e2 gui=nocombine'
 
 -- lion.vim
 vim.g.lion_map_right = ALIGN_RIGHT
