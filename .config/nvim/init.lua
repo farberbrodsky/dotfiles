@@ -530,17 +530,21 @@ require('gitsigns').setup {
 
     -- Navigation (for repeating with ; and , - use treesitter textobjects)
     local function next_hunk()
-      if vim.wo.diff then return ']c' end
-      vim.schedule(function() gs.next_hunk() end)
-      return '<Ignore>'
+      if vim.wo.diff then
+        vim.call('feedkeys', ']c', 'n')
+      else
+        vim.schedule(function() gs.next_hunk() end)
+      end
     end
     local function prev_hunk()
-      if vim.wo.diff then return '[c' end
-      vim.schedule(function() gs.prev_hunk() end)
-      return '<Ignore>'
+      if vim.wo.diff then
+        vim.call('feedkeys', '[c', 'n')
+      else
+        vim.schedule(function() gs.prev_hunk() end)
+      end
     end
 
-    local next_hunk_repeat, prev_hunk_repeat = ts_repeat_move.make_repeatable_move_pair(gs.next_hunk, gs.prev_hunk)
+    local next_hunk_repeat, prev_hunk_repeat = ts_repeat_move.make_repeatable_move_pair(next_hunk, prev_hunk)
     map({'n', 'x', 'o'}, NEXT_CHANGE, next_hunk_repeat, {expr = true})
     map({'n', 'x', 'o'}, PREV_CHANGE, prev_hunk_repeat, {expr = true})
 
