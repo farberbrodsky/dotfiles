@@ -10,15 +10,15 @@ local GOTO_TYPE_DEFINITION = 'gy'
 local GOTO_IMPLEMENTATION  = 'gi'
 local GOTO_REFERENCES      = 'gr'
 
-local COC_OUTLINE              = 'go'
-local COC_WORKSPACE_SYMBOLS    = 'gt'
-local COC_INCOMING_HIERARCHY   = 'ghi'
-local COC_OUTGOING_HIERARCHY   = 'gho'
-local COC_SWITCH_SOURCE_HEADER = 'gs'
+local COC_OUTLINE                     = 'go'
+local COC_TELESCOPE_WORKSPACE_SYMBOLS = 'gt'
+local COC_INCOMING_HIERARCHY          = 'ghi'
+local COC_OUTGOING_HIERARCHY          = 'gho'
+local COC_SWITCH_SOURCE_HEADER        = 'gs'
 
 local COC_SHOW_DOCS            = 'K'
 local COC_RENAME               = '<leader>rn'
-local COC_FORMAT_SELECTED      = '<leader>f'
+local COC_FORMAT_SELECTED      = '<leader>rf'
 local COC_QUICK_FIX            = '<leader>qf'
 local COC_CODE_LENS            = '<leader>cl'
 local SCROLL_PREVIEW_DOWN      = '<M-j>'
@@ -47,6 +47,10 @@ local PREV_CHANGE     = '[c'
 local APPEND_NEXT_ARGUMENT = 'a]a'
 local APPEND_PREV_ARGUMENT = 'a[a'
 
+local TELESCOPE_GIT_FILES = '<C-p>'
+local TELESCOPE_FILES     = '<leader>ff'
+local TELESCOPE_GREP      = '<leader>fg'
+local TELESCOPE_BUFFERS   = '<C-b>'
 
 local GITSIGNS_PREVIEW_HUNK_INLINE = '<leader>hp'
 local GITSIGNS_TOGGLE_DELETED      = '<leader>td'
@@ -69,8 +73,6 @@ local ALIGN_RIGHT = 'gl'
 local ALIGN_LEFT  = 'gL'
 
 local TCOMMENT_LEADER = 'gc'  -- gc - toggle comment, gcc - toggle comment for line, etc. See: :h tcomment.txt
-
-local CTRLP_BUFFER = '<C-b>'
 
 -- Helper functions
 local function for_hjkl(f)
@@ -101,9 +103,11 @@ add_plugin 'windwp/nvim-autopairs'                     -- Autopairs with treesit
 add_plugin 'scrooloose/nerdtree'                       -- The tree file viewer sidebar
 add_plugin 'tpope/vim-obsession'                       -- Save session automatically by using :Obsess - then, nvim -S Session.vim
 add_plugin 'phaazon/hop.nvim'                          -- Like EasyMotion
-add_plugin 'ctrlpvim/ctrlp.vim'                        -- Ctrl-P for fuzzy file search
 add_plugin 'tommcdo/vim-lion'                          -- lion.vim - align text by some character
 add_plugin 'tomtom/tcomment_vim'                       -- tcomment - comment stuff out
+add_plugin 'nvim-lua/plenary.nvim'                     -- telescope
+add_plugin 'nvim-telescope/telescope.nvim'             -- telescope
+add_plugin 'fannheyward/telescope-coc.nvim'            -- telescope + CoC
 
 add_plugin('nvim-treesitter/nvim-treesitter',"{'do': ':TSUpdate'}") -- Treesitter
 add_plugin 'nvim-treesitter/nvim-treesitter-textobjects'            -- Treesitter text objects
@@ -333,7 +337,7 @@ local opts = {silent = true, nowait = true}
 -- Find symbol of current document
 vim.keymap.set("n", COC_OUTLINE,           ":<C-u>CocList outline<cr>",    opts)
 -- Search workspace symbols
-vim.keymap.set("n", COC_WORKSPACE_SYMBOLS, ":<C-u>CocList -I symbols<cr>", opts)
+-- vim.keymap.set("n", COC_WORKSPACE_SYMBOLS, ":<C-u>CocList -I symbols<cr>", opts)
 -- Do default action for next item
 -- vim.keymap.set("n", "<space>j", ":<C-u>CocNext<cr>", opts)
 -- Do default action for previous item
@@ -467,10 +471,6 @@ vim.keymap.set('n', TOGGLE_NERDTREE, function() vim.api.nvim_command('NERDTreeTo
 -- close nerdtree if it's the last window
 vim.cmd 'autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif'
 
--- Ctrl-P
-vim.cmd "set wildignore+=*/target/*,*/node_modules/*,*.so,*.swp,*.zip"
-vim.keymap.set('', CTRLP_BUFFER, function() vim.api.nvim_command('CtrlPBuffer') end, { silent = true })
-
 -- indent blanklines
 require("indent_blankline").setup {
     show_trailing_blankline_indent = false
@@ -573,3 +573,32 @@ require('gitsigns').setup {
     map({'o', 'x'}, SELECT_HUNK_INNER, ':<C-U>Gitsigns select_hunk<CR>')
   end
 }
+
+-- telescope.nvim
+require('telescope').setup{
+    defaults = {
+        -- Default configuration for telescope goes here:
+    },
+    pickers = {
+        -- Default configuration for builtin pickers goes here:
+        -- picker_name = {
+        --   picker_config_key = value,
+        --   ...
+        -- }
+        -- Now the picker_config_key will be applied every time you call this
+        -- builtin picker
+    },
+    extensions = {
+        coc = {
+            prefer_locations = true
+        }
+    }
+}
+require('telescope').load_extension('coc')
+
+local telescope_builtin = require('telescope.builtin')
+vim.keymap.set('n', TELESCOPE_GIT_FILES, telescope_builtin.git_files, {})
+vim.keymap.set('n', TELESCOPE_FILES, telescope_builtin.find_files, {})
+vim.keymap.set('n', TELESCOPE_GREP, telescope_builtin.live_grep, {})
+vim.keymap.set('n', TELESCOPE_BUFFERS, telescope_builtin.buffers, {})
+vim.keymap.set('n', COC_TELESCOPE_WORKSPACE_SYMBOLS, function() vim.cmd('Telescope coc workspace_symbols') end, {})
