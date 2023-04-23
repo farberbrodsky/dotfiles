@@ -553,8 +553,8 @@ require('gitsigns').setup {
     end
 
     local next_hunk_repeat, prev_hunk_repeat = ts_repeat_move.make_repeatable_move_pair(next_hunk, prev_hunk)
-    map({'n', 'x', 'o'}, NEXT_CHANGE, next_hunk_repeat, {expr = true})
-    map({'n', 'x', 'o'}, PREV_CHANGE, prev_hunk_repeat, {expr = true})
+    map({'n', 'x', 'o'}, NEXT_CHANGE, next_hunk_repeat)
+    map({'n', 'x', 'o'}, PREV_CHANGE, prev_hunk_repeat)
 
     -- Actions
     map({'n', 'v'}, GITSIGNS_STAGE_HUNK, ':Gitsigns stage_hunk<CR>', { silent = true })
