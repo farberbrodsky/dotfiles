@@ -323,6 +323,7 @@ vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'edito
 -- Add airline support
 vim.g["airline#extensions#coc#enabled"] = 1
 vim.g["airline#extensions#coc#show_coc_status"] = 1
+vim.g["airline_theme"] = "catppuccin"
 
 -- Mappings for CoCList
 -- code actions and coc stuff
