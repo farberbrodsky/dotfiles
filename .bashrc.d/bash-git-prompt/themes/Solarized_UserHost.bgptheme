@@ -1,0 +1,25 @@
+# This theme for gitprompt.sh is optimized for the "Solarized Dark" and "Solarized Light" color schemes, but works great with any color scheme.
+# Based on "Solarized Extravagant", with user@host on the second line and some things removed.
+
+function override_git_prompt_colors() {
+  local bold_bright_white=$(echo -e "\001\e[1;97m\002")
+
+  GIT_PROMPT_THEME_NAME='Solarized UserHost'
+  GIT_PROMPT_STAGED="${Yellow}● "
+  GIT_PROMPT_UNTRACKED="${Cyan}… "
+  GIT_PROMPT_STASHED="${BoldMagenta}⚑ "
+  GIT_PROMPT_CLEAN="${Green}✔ "
+  GIT_PROMPT_COMMAND_OK="${Green}✔ "
+  GIT_PROMPT_COMMAND_FAIL="${Red}✘ "
+
+  GIT_PROMPT_START_USER="_LAST_COMMAND_INDICATOR_${Yellow}${PathShort}"
+  GIT_PROMPT_START_ROOT="${GIT_PROMPT_START_USER}"
+  GIT_PROMPT_END_USER="\n${BoldBlue}\\u${bold_bright_white}@${BoldBlue}\\h${BoldRed} ➤${ResetColor} "
+  GIT_PROMPT_END_ROOT="\n${BoldBlue}\\u${bold_bright_white}@${BoldBlue}\\h${BoldRed} #️ {ResetColor} "
+  GIT_PROMPT_LEADING_SPACE=1
+  GIT_PROMPT_PREFIX="${Cyan}["
+  GIT_PROMPT_SUFFIX="${Cyan}]" 
+  GIT_PROMPT_SYMBOLS_NO_REMOTE_TRACKING="✭"
+}
+
+reload_git_prompt_colors 'Solarized UserHost'
