@@ -37,12 +37,8 @@ _exit_status_prompt() {
 }
 
 PROMPT_COMMAND="$PROMPT_COMMAND _exit_status_prompt;"
-_exit_status_prompt
 
 # Path module
-cd() { builtin cd "$@" && _chpwd; }
-pushd() { builtin pushd "$@" && _chpwd; }
-popd() { builtin popd "$@" && _chpwd; }
 _chpwd() {
   case $PWD in
     $HOME/*/*/*/*) HPWD="${_GRAY_COLOR}~/...${_PATH_COLOR}/${PWD#"${PWD%/*/*/*}/"}";;
@@ -55,6 +51,9 @@ _chpwd() {
   esac
   HPWD="$HPWD${_PROMPT_COLOR}"
 }
+cd() { builtin cd "$@" && _chpwd; }
+pushd() { builtin pushd "$@" && _chpwd; }
+popd() { builtin popd "$@" && _chpwd; }
 _chpwd
 
 # Git module
@@ -125,7 +124,7 @@ if command -v git >/dev/null 2>&1; then
             if [ "$git_remote" != "." ]; then
                  _git_show="$_git_show remote ${git_remote}"
             fi
-            _git_show="$_git_show${git_symbols}${_PROMPT_COLOR}"
+            _git_show="${_git_show}${git_symbols}${_PROMPT_COLOR}"
         fi
     }
     PROMPT_COMMAND="$PROMPT_COMMAND _git_prompt;"
@@ -177,7 +176,7 @@ _timer_stop() {
 }
 
 PROMPT_COMMAND="$PROMPT_COMMAND _timer_stop"
-PS1="${_PROMPT_COLOR}${_exit_status_color_and_number_show}[\t]${_PROMPT_COLOR} \h:$HPWD${_git_show}${_timer_show}${_jobs_show} \$\e[m "
-PS2=""  # same as PS1, but secondary
+PS1='${_PROMPT_COLOR}${_exit_status_color_and_number_show}[\t]${_PROMPT_COLOR} \h:$HPWD${_git_show}${_timer_show}${_jobs_show} \$\e[m '
+PS2=''  # same as PS1, but secondary
 # select command prompt: PS3
 # execution trace: PS4
