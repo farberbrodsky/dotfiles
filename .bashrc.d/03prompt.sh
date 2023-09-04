@@ -1,12 +1,13 @@
 _RED_COLOR="$(echo -e "\033[0;31m")"
 _GREEN_COLOR="$(echo -e "\033[0;32m")"
 _BLUE_COLOR="$(echo -e "\033[0;34m")"
-_MAGENTA_COLOR="$(echo -e "\033[0;35m")"
+_PURPLE_COLOR="$(echo -e "\033[0;35m")"
+_CYAN_COLOR="$(echo -e "\033[1;36m")"
 _GRAY_COLOR="$(echo -e "\033[0;37m")"
 
 # general
-_PROMPT_COLOR="$_GREEN_COLOR"
-_IMPORTANT_COLOR="$_MAGENTA_COLOR"
+_PROMPT_COLOR="$_CYAN_COLOR"
+_IMPORTANT_COLOR="$_PURPLE_COLOR"
 # path
 _PATH_COLOR="$_BLUE_COLOR"
 # git
