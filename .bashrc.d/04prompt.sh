@@ -1,9 +1,10 @@
-_RED_COLOR="$(echo -e "\033[0;31m")"
-_GREEN_COLOR="$(echo -e "\033[0;32m")"
-_BLUE_COLOR="$(echo -e "\033[0;34m")"
-_PURPLE_COLOR="$(echo -e "\033[0;35m")"
-_CYAN_COLOR="$(echo -e "\033[1;36m")"
-_GRAY_COLOR="$(echo -e "\033[0;37m")"
+_RESET_COLOR='\[\e[m\]'
+_RED_COLOR='\[\e[31m\]'
+_GREEN_COLOR='\[\e[32m\]'
+_BLUE_COLOR='\[\e[34m\]'
+_PURPLE_COLOR='\[\e[35m\]'
+_CYAN_COLOR='\[\e[36m\]'
+_GRAY_COLOR='\[\e[37m\]'
 
 # general
 _PROMPT_COLOR="$_CYAN_COLOR"
@@ -13,6 +14,7 @@ _SUCCESS_COLOR="$_GREEN_COLOR"
 _FAIL_COLOR="$_RED_COLOR"
 # path
 _PATH_COLOR="$_BLUE_COLOR"
+_GIT_PATH_COLOR="$_GREEN_COLOR"
 # git
 _GIT_COLOR="$_RED_COLOR"
 _REMOVE_COLOR="$_RED_COLOR"
@@ -21,7 +23,6 @@ _ADD_COLOR="$_GREEN_COLOR"
 _UNTRACKED_COLOR="$_GREEN_COLOR"
 _CHANGE_COLOR="$_BLUE_COLOR"
 
-PROMPT_COMMAND=()
 PROMPT_COMMAND=""
 
 # Exit status module
@@ -40,16 +41,50 @@ PROMPT_COMMAND="$PROMPT_COMMAND _exit_status_prompt;"
 
 # Path module
 _chpwd() {
-  case $PWD in
-    $HOME/*/*/*/*) HPWD="${_GRAY_COLOR}~/...${_PATH_COLOR}/${PWD#"${PWD%/*/*/*}/"}";;
-    $HOME/*/*/*) HPWD="${_GRAY_COLOR}~${_PATH_COLOR}/${PWD#"${PWD%/*/*/*}/"}";;
-    $HOME/*/*) HPWD="${_GRAY_COLOR}~${_PATH_COLOR}/${PWD#"${PWD%/*/*}/"}";;
-    $HOME/*) HPWD="${_GRAY_COLOR}~${_PATH_COLOR}/${PWD##*/}";;
-    $HOME) HPWD="${_GRAY_COLOR}~${_PATH_COLOR}";;
-    /*/*/*/*) HPWD="${_GRAY_COLOR}/...${_PATH_COLOR}/${PWD#"${PWD%/*/*/*}/"}";;
-    *) HPWD="${_PATH_COLOR}$PWD";;
-  esac
-  HPWD="$HPWD${_PROMPT_COLOR}"
+    # For git: try to base on the worktree directory and show the whole path after it
+    local use_git=0
+    if command -v git >/dev/null 2>&1; then
+        local worktree_dir="$(git rev-parse --show-toplevel 2>/dev/null)"
+        if [ "$?" = "0" ] && [ ! -z "$worktree_dir" ]; then
+            local path_absdir="$(realpath $PWD)"
+            case "$path_absdir/" in
+                "$worktree_dir"/*/*/*/*/*)
+                    use_git=1
+                    HPWD="${_GIT_PATH_COLOR}$(basename "${worktree_dir}")${_GRAY_COLOR}/...${_PATH_COLOR}${path_absdir#"${path_absdir%/*/*/*}"}"
+                    ;;
+                "$worktree_dir"/*) use_git=1;
+                    HPWD="${_GIT_PATH_COLOR}$(basename "${worktree_dir}")${_PATH_COLOR}${path_absdir#"$worktree_dir"}"
+                    ;;
+                *);;
+            esac
+        fi
+    fi
+    if [ "$use_git" = "0" ]; then
+        case $PWD in
+            $HOME/*/*/*/*)
+                HPWD="${_GRAY_COLOR}~/...${_PATH_COLOR}/${PWD#"${PWD%/*/*/*}/"}"
+                ;;
+            $HOME/*/*/*)
+                HPWD="${_GRAY_COLOR}~${_PATH_COLOR}/${PWD#"${PWD%/*/*/*}/"}"
+                ;;
+            $HOME/*/*)
+                HPWD="${_GRAY_COLOR}~${_PATH_COLOR}/${PWD#"${PWD%/*/*}/"}"
+                ;;
+            $HOME/*)
+                HPWD="${_GRAY_COLOR}~${_PATH_COLOR}/${PWD##*/}"
+                ;;
+            $HOME)
+                HPWD="${_GRAY_COLOR}~${_PATH_COLOR}"
+                ;;
+            /*/*/*/*)
+                HPWD="${_GRAY_COLOR}/...${_PATH_COLOR}/${PWD#"${PWD%/*/*/*}/"}"
+                ;;
+            *)
+                HPWD="${_PATH_COLOR}$PWD"
+                ;;
+        esac
+    fi
+    HPWD="$HPWD${_PROMPT_COLOR}"
 }
 cd() { builtin cd "$@" && _chpwd; }
 pushd() { builtin pushd "$@" && _chpwd; }
@@ -76,7 +111,10 @@ if command -v git >/dev/null 2>&1; then
             }
 
             local -a git_status_fields
-            while IFS=$"\n" read -r line; do git_status_fields+=("${line}"); done < <(bash "$HOME/.bashrc.d/bash-git-prompt/gitstatus.sh" 2>/dev/null)
+            while IFS= read -r line; do
+                git_status_fields+=("${line}");
+            done < <(bash "$HOME/.bashrc.d/bash-git-prompt/gitstatus.sh" 2>/dev/null);
+
             local git_branch_state="$(_replaceSymbols ${git_status_fields[0]})"
             local git_remote="$(_replaceSymbols ${git_status_fields[1]})"
             local git_remote_url="$(_replaceSymbols ${git_status_fields[2]})"
@@ -150,20 +188,30 @@ _jobs_prompt() {
 }
 PROMPT_COMMAND="$PROMPT_COMMAND _jobs_prompt;"
 
-# Timer module (must be last)
+# Timer module
 _timer=""
-_timer_ready="1"
+_timer_ready="0"
+set +T
 _timer_start() {
-    # only set when told to set
+    # only set when told to set, and it's not a prompt command
     if [ "$_timer_ready" = "1" ]; then
+        for cmd in "${PROMPT_COMMAND[@]}"; do
+            if [ "$BASH_COMMAND" = "$cmd" ]; then
+                # it's a prompt command
+                return
+            fi
+            # echo "$BASH_COMMAND $cmd"
+        done
         _timer="$(date +%s%N 2>/dev/null)"
         _timer_ready="0"
     fi
 }
-_timer_start
 trap "_timer_start" DEBUG
 
 _timer_stop() {
+    if [ -z "$_timer" ]; then
+        return
+    fi
     local now="$(date +%s%N)"
     local time_ns="$(($now - $_timer))"
     if [ "$time_ns" -gt 1000000000 ]; then
@@ -171,12 +219,28 @@ _timer_stop() {
     else
         _timer_show=""
     fi
-    # allow to set
-    _timer_ready="1"
+    # must run last - happens at the end of this file
+    # _timer_ready="1"
 }
 
-PROMPT_COMMAND="$PROMPT_COMMAND _timer_stop"
-PS1='${_PROMPT_COLOR}${_exit_status_color_and_number_show}[\t]${_PROMPT_COLOR} \h:$HPWD${_git_show}${_timer_show}${_jobs_show} \$\e[m '
-PS2=''  # same as PS1, but secondary
+PROMPT_COMMAND="$PROMPT_COMMAND _timer_stop;"
+
+# and finally
+PS0=""
+PS2="> "
 # select command prompt: PS3
 # execution trace: PS4
+
+# update ps1 each time
+# this is hack because of: https://stackoverflow.com/questions/6592077/bash-prompt-and-echoing-colors-inside-a-function
+_update_ps1() {
+    PS1="\[\e[m\]${_PROMPT_COLOR}${_exit_status_color_and_number_show}[\t]${_PROMPT_COLOR} \h:$HPWD${_git_show}${_timer_show}${_jobs_show} \$\[\e[m\] "
+}
+PROMPT_COMMAND="$PROMPT_COMMAND _update_ps1;"
+
+# hack to set _timer_ready after EVERYTHING including kitty shell integration
+_add_update_ps1() {
+    PROMPT_COMMAND="${PROMPT_COMMAND/_add_update_ps1/}"
+    PROMPT_COMMAND+=("_timer_ready=1")
+}
+PROMPT_COMMAND="$PROMPT_COMMAND _add_update_ps1"
