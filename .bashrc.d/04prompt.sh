@@ -236,11 +236,11 @@ PS2="> "
 _update_ps1() {
     PS1="\[\e[m\]${_PROMPT_COLOR}${_exit_status_color_and_number_show}[\t]${_PROMPT_COLOR} \h:$HPWD${_git_show}${_timer_show}${_jobs_show} \$\[\e[m\] "
 }
-PROMPT_COMMAND="$PROMPT_COMMAND _update_ps1;"
+PROMPT_COMMAND="$PROMPT_COMMAND _update_ps1"
 
 # hack to set _timer_ready after EVERYTHING including kitty shell integration
 _add_update_ps1() {
-    PROMPT_COMMAND="${PROMPT_COMMAND/_add_update_ps1/}"
+    PROMPT_COMMAND="${PROMPT_COMMAND/;_add_update_ps1/}"
     PROMPT_COMMAND+=("_timer_ready=1")
 }
-PROMPT_COMMAND="$PROMPT_COMMAND _add_update_ps1"
+PROMPT_COMMAND="$PROMPT_COMMAND;_add_update_ps1"
