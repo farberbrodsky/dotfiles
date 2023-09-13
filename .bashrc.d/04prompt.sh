@@ -44,9 +44,12 @@ _chpwd() {
     # For git: try to base on the worktree directory and show the whole path after it
     local use_git=0
     if command -v git >/dev/null 2>&1; then
-        local worktree_dir="$(git rev-parse --show-toplevel 2>/dev/null)"
-        if [ "$?" = "0" ] && [ ! -z "$worktree_dir" ]; then
-            local path_absdir="$(realpath $PWD)"
+        local worktree_dir
+        worktree_dir="$(git rev-parse --show-toplevel 2>/dev/null)"
+        # shellcheck disable=SC2181
+        if [ "$?" = "0" ] && [ -n "$worktree_dir" ]; then
+            local path_absdir
+            path_absdir="$(realpath "$PWD")"
             case "$path_absdir/" in
                 "$worktree_dir"/*/*/*/*/*)
                     use_git=1
@@ -61,20 +64,11 @@ _chpwd() {
     fi
     if [ "$use_git" = "0" ]; then
         case $PWD in
-            $HOME/*/*/*/*)
+            "$HOME"/*/*/*/*)
                 HPWD="${_GRAY_COLOR}~/...${_PATH_COLOR}/${PWD#"${PWD%/*/*/*}/"}"
                 ;;
-            $HOME/*/*/*)
-                HPWD="${_GRAY_COLOR}~${_PATH_COLOR}/${PWD#"${PWD%/*/*/*}/"}"
-                ;;
-            $HOME/*/*)
-                HPWD="${_GRAY_COLOR}~${_PATH_COLOR}/${PWD#"${PWD%/*/*}/"}"
-                ;;
-            $HOME/*)
-                HPWD="${_GRAY_COLOR}~${_PATH_COLOR}/${PWD##*/}"
-                ;;
-            $HOME)
-                HPWD="${_GRAY_COLOR}~${_PATH_COLOR}"
+            "$HOME"/*|"$HOME")
+                HPWD="${_GRAY_COLOR}~${_PATH_COLOR}${PWD#"$HOME"}"
                 ;;
             /*/*/*/*)
                 HPWD="${_GRAY_COLOR}/...${_PATH_COLOR}/${PWD#"${PWD%/*/*/*}/"}"
@@ -95,7 +89,8 @@ _chpwd
 _git_show=""
 if command -v git >/dev/null 2>&1; then
     _git_prompt() {
-        local git_dir="$(git rev-parse --git-dir 2>/dev/null)"
+        local git_dir
+        git_dir="$(git rev-parse --git-dir 2>/dev/null)"
         if [ -z "$git_dir" ]; then
             _git_show=""
         else
@@ -115,17 +110,18 @@ if command -v git >/dev/null 2>&1; then
                 git_status_fields+=("${line}");
             done < <(bash "$HOME/.bashrc.d/bash-git-prompt/gitstatus.sh" 2>/dev/null);
 
-            local git_branch_state="$(_replaceSymbols ${git_status_fields[0]})"
-            local git_remote="$(_replaceSymbols ${git_status_fields[1]})"
-            local git_remote_url="$(_replaceSymbols ${git_status_fields[2]})"
-            local git_upstream_trimmed="${git_status_fields[3]}"
-            local git_staged="${git_status_fields[4]}"
-            local git_conflicts="${git_status_fields[5]}"
-            local git_changed="${git_status_fields[6]}"
-            local git_untracked="${git_status_fields[7]}"
-            local git_stashed="${git_status_fields[8]}"
-            local git_clean="${git_status_fields[9]}"
-            local git_detached_head="${git_status_fields[10]}"
+            local git_branch_state git_remote _git_remote_url _git_upstream_command git_staged git_conflicts git_changed git_untracked git_stashed git_clean _git_detached_head
+            git_branch_state="$(_replaceSymbols "${git_status_fields[0]}")"
+            git_remote="$(_replaceSymbols "${git_status_fields[1]}")"
+            _git_remote_url="$(_replaceSymbols "${git_status_fields[2]}")"
+            _git_upstream_trimmed="${git_status_fields[3]}"
+            git_staged="${git_status_fields[4]}"
+            git_conflicts="${git_status_fields[5]}"
+            git_changed="${git_status_fields[6]}"
+            git_untracked="${git_status_fields[7]}"
+            git_stashed="${git_status_fields[8]}"
+            git_clean="${git_status_fields[9]}"
+            _git_detached_head="${git_status_fields[10]}"
 
             # list of symbols
             local git_symbols=""
@@ -154,7 +150,7 @@ if command -v git >/dev/null 2>&1; then
             fi
 
             # put in parentheses
-            if ! [ -z "$git_symbols" ]; then
+            if [ -n "$git_symbols" ]; then
                 local git_symbols=" ($git_symbols)"
             fi
 
@@ -188,6 +184,16 @@ _jobs_prompt() {
 }
 PROMPT_COMMAND="$PROMPT_COMMAND _jobs_prompt;"
 
+# Python venv module
+_venv_show=""
+_venv_prompt() {
+    if [ -z "$VIRTUAL_ENV" ]; then
+        _venv_show=""
+    else
+        _venv_show=" ${_IMPORTANT_COLOR}env $(basename "$VIRTUAL_ENV")${_PROMPT_COLOR}"
+    fi
+}
+
 # Timer module
 _timer=""
 _timer_ready="0"
@@ -212,10 +218,11 @@ _timer_stop() {
     if [ -z "$_timer" ]; then
         return
     fi
-    local now="$(date +%s%N)"
-    local time_ns="$(($now - $_timer))"
+    local now time_ns
+    now="$(date +%s%N)"
+    time_ns="$((now - _timer))"
     if [ "$time_ns" -gt 1000000000 ]; then
-        _timer_show=" ${_IMPORTANT_COLOR}took $(( ($time_ns + 500000000) / 1000000000 ))s${_PROMPT_COLOR}"
+        _timer_show=" ${_IMPORTANT_COLOR}took $(( (time_ns + 500000000) / 1000000000 ))s${_PROMPT_COLOR}"
     else
         _timer_show=""
     fi
@@ -234,7 +241,7 @@ PS2="> "
 # update ps1 each time
 # this is hack because of: https://stackoverflow.com/questions/6592077/bash-prompt-and-echoing-colors-inside-a-function
 _update_ps1() {
-    PS1="\[\e[m\]${_PROMPT_COLOR}${_exit_status_color_and_number_show}[\t]${_PROMPT_COLOR} \h:$HPWD${_git_show}${_timer_show}${_jobs_show} \$\[\e[m\] "
+    PS1="\[\e[m\]${_PROMPT_COLOR}${_exit_status_color_and_number_show}[\t]${_PROMPT_COLOR} \h:$HPWD${_git_show}${_venv_show}${_timer_show}${_jobs_show} \$\[\e[m\] "
 }
 PROMPT_COMMAND="$PROMPT_COMMAND _update_ps1"
 
@@ -242,5 +249,7 @@ PROMPT_COMMAND="$PROMPT_COMMAND _update_ps1"
 _add_update_ps1() {
     PROMPT_COMMAND="${PROMPT_COMMAND/;_add_update_ps1/}"
     PROMPT_COMMAND+=("_timer_ready=1")
+    _timer_ready=1
 }
+# shellcheck disable=SC2178,SC2128
 PROMPT_COMMAND="$PROMPT_COMMAND;_add_update_ps1"

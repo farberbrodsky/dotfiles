@@ -35,7 +35,7 @@ if command -v nvim >/dev/null 2>&1; then
     # always define nvim as a wrapper function
     _real_nvim="$(command -v nvim)"
     nvim() {
-        if [ "$nvm_loaded" != "1" ]; then _lazy_load_nvm; fi
+        if [ "$_nvm_loaded" != "1" ]; then _lazy_load_nvm; fi
         "$_real_nvim" "$@"
     }
 fi
