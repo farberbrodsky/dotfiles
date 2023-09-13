@@ -193,6 +193,7 @@ _venv_prompt() {
         _venv_show=" ${_IMPORTANT_COLOR}env $(basename "$VIRTUAL_ENV")${_PROMPT_COLOR}"
     fi
 }
+PROMPT_COMMAND="$PROMPT_COMMAND _venv_prompt;"
 
 # Timer module
 _timer=""
