@@ -118,6 +118,9 @@ vim.cmd "Plug 'neoclide/coc.nvim', {'branch': 'release'}"             -- CoC
 
 vim.call('plug#end')
 
+-- Useful function
+local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+
 -- Navigation keybindings
 -- CTRL-H,J,K,L move between windows
 for_hjkl(function (c) vim.keymap.set('n', '<C-' .. c .. '>', '<C-w><C-' .. c .. '>', { silent = true }) end)
@@ -221,8 +224,13 @@ vim.keymap.set("i", "<c-space>", "coc#refresh()", {silent = true, expr = true})
 
 -- Use `[g` and `]g` to navigate diagnostics
 -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
-vim.keymap.set("n", PREV_DIAGNOSTIC, "<Plug>(coc-diagnostic-prev)", {silent = true})
-vim.keymap.set("n", NEXT_DIAGNOSTIC, "<Plug>(coc-diagnostic-next)", {silent = true})
+do
+    local function next_diagnostic() vim.api.nvim_command("call CocAction('diagnosticNext')") end
+    local function prev_diagnostic() vim.api.nvim_command("call CocAction('diagnosticPrevious')") end
+    local next_diagnostic_repeat, prev_diagnostic_repeat = ts_repeat_move.make_repeatable_move_pair(next_diagnostic, prev_diagnostic)
+    vim.keymap.set({'n', 'x', 'o'}, NEXT_DIAGNOSTIC, next_diagnostic_repeat)
+    vim.keymap.set({'n', 'x', 'o'}, PREV_DIAGNOSTIC, prev_diagnostic_repeat)
+end
 
 -- GoTo code navigation
 vim.keymap.set("n", GOTO_DEFINITION,      "<Plug>(coc-definition)",      {silent = true})
@@ -430,7 +438,6 @@ require'nvim-treesitter.configs'.setup {
 }
 
 -- Make these repeatable with ; and ,
-local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
 vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
 vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
 -- Keep f,F,t,T repeatable
