@@ -15,5 +15,9 @@
     tool = nvimdiff
 [difftool "nvimdiff"]
     cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+[merge]
+    tool = nvimmerge
+[mergetool "nvimmerge"]
+    cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
 [mergetool]
 	trustExitCode = true

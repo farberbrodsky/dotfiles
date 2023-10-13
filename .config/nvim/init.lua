@@ -4,6 +4,7 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
 local CREATE_TERMINAL = '<C-t>'
 local TOGGLE_NERDTREE = '<C-f>'
 local TOGGLE_LINE_NUMBERS = '<C-n>'
+local QUIT_ALL = '<C-\\>'
 
 local GOTO_DEFINITION      = 'gd'
 local GOTO_TYPE_DEFINITION = 'gy'
@@ -156,6 +157,9 @@ vim.keymap.set('n', TOGGLE_LINE_NUMBERS, function()
     set invnumber
   ]]
 end)
+
+-- Quit all with Ctrl-\
+vim.keymap.set('n', QUIT_ALL, ':qa<CR>')
 
 -- Tab vim settings
 vim.opt.tabstop = 4
