@@ -498,6 +498,9 @@ vim.g.lion_map_left  = ALIGN_LEFT
 vim.g.tcomment_opleader1 = TCOMMENT_LEADER
 
 -- gitsigns.nvim
+local next_hunk_repeat, prev_hunk_repeat = ts_repeat_move.make_repeatable_move_pair(function() vim.call('feedkeys', ']c', 'n') end, function() vim.call('feedkeys', '[c', 'n') end)
+vim.keymap.set({'n', 'x', 'o'}, NEXT_CHANGE, next_hunk_repeat)
+vim.keymap.set({'n', 'x', 'o'}, PREV_CHANGE, prev_hunk_repeat)
 require('gitsigns').setup {
   signs = {
     add          = { text = '│' },
