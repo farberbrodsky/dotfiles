@@ -110,10 +110,10 @@ add_plugin 'nvim-lua/plenary.nvim'                     -- telescope
 add_plugin 'nvim-telescope/telescope.nvim'             -- telescope
 add_plugin 'fannheyward/telescope-coc.nvim'            -- telescope + CoC
 
-add_plugin('nvim-treesitter/nvim-treesitter',"{'do': ':TSUpdate'}") -- Treesitter
-add_plugin 'nvim-treesitter/nvim-treesitter-textobjects'            -- Treesitter text objects
-add_plugin 'RRethy/nvim-treesitter-textsubjects'                    -- Treesitter text subjects
-add_plugin 'HiPhish/nvim-ts-rainbow2'                               -- Treesitter rainbow parentheses
+add_plugin 'nvim-treesitter/nvim-treesitter'              -- Treesitter
+add_plugin 'nvim-treesitter/nvim-treesitter-textobjects'  -- Treesitter text objects
+add_plugin 'RRethy/nvim-treesitter-textsubjects'          -- Treesitter text subjects
+add_plugin 'HiPhish/nvim-ts-rainbow2'                     -- Treesitter rainbow parentheses
 
 vim.cmd "Plug 'neoclide/coc.nvim', {'branch': 'release'}"             -- CoC
 
@@ -484,11 +484,13 @@ vim.keymap.set('n', TOGGLE_NERDTREE, function() vim.api.nvim_command('NERDTreeTo
 vim.cmd 'autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif'
 
 -- indent blanklines
-require("indent_blankline").setup {
-    show_trailing_blankline_indent = false
+require("ibl").setup {
+    whitespace = {
+        remove_blankline_trail = false
+    }
 }
 vim.g.indent_blankline_use_treesitter = true
-vim.cmd 'highlight IndentBlanklineChar guifg=#e2e2e2 gui=nocombine'
+vim.cmd 'highlight IblIndent guifg=#e2e2e2 gui=nocombine'
 
 -- lion.vim
 vim.g.lion_map_right = ALIGN_RIGHT
@@ -539,9 +541,9 @@ require('gitsigns').setup {
     row = 0,
     col = 1
   },
-  yadm = {
-    enable = false
-  },
+  -- yadm = {
+  --   enable = false
+  -- },
   on_attach = function(bufnr)
     local gs = package.loaded.gitsigns
 
