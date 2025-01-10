@@ -188,3 +188,7 @@ bindsym $mod+minus [instance="[^(asfijoioo)]" class="[^(Spotify)]"] scratchpad s
 # Spotify scratchpad
 for_window [class="Spotify"] move scratchpad
 bindsym $mod+Shift+m [class="Spotify"] scratchpad show
+
+# Volume control
+bindsym $mod+n exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym $mod+m exec --no-startup-id pactl set-sink-volume 0 +5%
