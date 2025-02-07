@@ -192,3 +192,9 @@ bindsym $mod+Shift+m [class="Spotify"] scratchpad show
 # Volume control
 bindsym $mod+n exec --no-startup-id pactl set-sink-volume 0 -5%
 bindsym $mod+m exec --no-startup-id pactl set-sink-volume 0 +5%
+
+# play/skip
+bindsym $mod+p exec playerctl play-pause
+# [, ]
+bindcode $mod+34 exec playerctl previous
+bindcode $mod+35 exec playerctl next
