@@ -113,7 +113,7 @@ add_plugin 'fannheyward/telescope-coc.nvim'            -- telescope + CoC
 add_plugin 'nvim-treesitter/nvim-treesitter'              -- Treesitter
 add_plugin 'nvim-treesitter/nvim-treesitter-textobjects'  -- Treesitter text objects
 add_plugin 'RRethy/nvim-treesitter-textsubjects'          -- Treesitter text subjects
-add_plugin 'HiPhish/nvim-ts-rainbow2'                     -- Treesitter rainbow parentheses
+add_plugin 'HiPhish/rainbow-delimiters.nvim'              -- Rainbow parentheses
 
 vim.cmd "Plug 'neoclide/coc.nvim', {'branch': 'release'}"             -- CoC
 
@@ -218,9 +218,9 @@ local opts = {silent = true, noremap = true, expr = true, replace_keycodes = fal
 vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
 vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 
--- Make <CR> to accept selected completion item or notify coc.nvim to format
+-- Make <C-p> to accept selected completion item or notify coc.nvim to format
 -- <C-g>u breaks current undo, please make your own choice
-vim.keymap.set("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
+vim.keymap.set("i", "<C-p>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
 -- Use <c-j> to trigger snippets
 -- vim.keymap.set("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
 -- Use <c-space> to trigger completion
@@ -428,16 +428,6 @@ require'nvim-treesitter.configs'.setup {
     keymaps = {
       [SELECT_TEXTSUBJECT_SMART] = 'textsubjects-smart'
     }
-  },
-
-  rainbow = {
-    enable = true,
-    -- list of languages you want to disable the plugin for
-    disable = {},
-    -- Which query to use for finding delimiters
-    query = 'rainbow-parens',
-    -- Highlight the entire buffer all at once
-    strategy = require('ts-rainbow').strategy.global,
   }
 }
 
@@ -469,6 +459,10 @@ require('nvim-autopairs').setup({
 -- Atom One Light theme
 vim.o.background = 'light'
 vim.cmd 'colorscheme catppuccin-latte'
+
+-- rainbow
+require('rainbow-delimiters.setup').setup {
+}
 
 -- Airline
 vim.g.airline_powerline_fonts = 1
@@ -617,5 +611,6 @@ local telescope_builtin = require('telescope.builtin')
 vim.keymap.set('n', TELESCOPE_GIT_FILES, telescope_builtin.git_files, {})
 vim.keymap.set('n', TELESCOPE_FILES, telescope_builtin.find_files, {})
 vim.keymap.set('n', TELESCOPE_GREP, telescope_builtin.live_grep, {})
+vim.keymap.set('v', TELESCOPE_GREP, telescope_builtin.grep_string, {})
 vim.keymap.set('n', TELESCOPE_BUFFERS, telescope_builtin.buffers, {})
 vim.keymap.set('n', COC_TELESCOPE_WORKSPACE_SYMBOLS, function() vim.cmd('Telescope coc workspace_symbols') end, {})
