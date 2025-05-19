@@ -23,8 +23,6 @@ _ADD_COLOR="$_GREEN_COLOR"
 _UNTRACKED_COLOR="$_GREEN_COLOR"
 _CHANGE_COLOR="$_BLUE_COLOR"
 
-PROMPT_COMMAND=""
-
 # Exit status module
 # if success - nothing, if failed - set color red and show number
 _exit_status_color_and_number_show=""
@@ -32,12 +30,14 @@ _exit_status_prompt() {
     local exit_status="$?"
     if [ "$exit_status" = "0" ]; then
         _exit_status_color_and_number_show=""
+    elif [ "$exit_status" = "130" ]; then
+        _exit_status_color_and_number_show="${_FAIL_COLOR}"
     else
         _exit_status_color_and_number_show="${_FAIL_COLOR}(${exit_status})"
     fi
 }
 
-PROMPT_COMMAND="$PROMPT_COMMAND _exit_status_prompt;"
+PROMPT_COMMAND+=("_exit_status_prompt")
 
 # Path module
 _chpwd() {
@@ -161,7 +161,7 @@ if command -v git >/dev/null 2>&1; then
             _git_show="${_git_show}${git_symbols}${_PROMPT_COLOR}"
         fi
     }
-    PROMPT_COMMAND="$PROMPT_COMMAND _git_prompt;"
+    PROMPT_COMMAND+=("_git_prompt")
 fi
 
 # Jobs module
@@ -182,7 +182,7 @@ _jobs_prompt() {
         _jobs_show=""
     fi
 }
-PROMPT_COMMAND="$PROMPT_COMMAND _jobs_prompt;"
+PROMPT_COMMAND+=("_jobs_prompt")
 
 # Python venv module
 _venv_show=""
@@ -193,7 +193,7 @@ _venv_prompt() {
         _venv_show=" ${_IMPORTANT_COLOR}env $(basename "$VIRTUAL_ENV")${_PROMPT_COLOR}"
     fi
 }
-PROMPT_COMMAND="$PROMPT_COMMAND _venv_prompt;"
+PROMPT_COMMAND+=("_venv_prompt")
 
 # Timer module
 _timer=""
@@ -202,13 +202,6 @@ set +T
 _timer_start() {
     # only set when told to set, and it's not a prompt command
     if [ "$_timer_ready" = "1" ]; then
-        for cmd in "${PROMPT_COMMAND[@]}"; do
-            if [ "$BASH_COMMAND" = "$cmd" ]; then
-                # it's a prompt command
-                return
-            fi
-            # echo "$BASH_COMMAND $cmd"
-        done
         _timer="$(date +%s%N 2>/dev/null)"
         _timer_ready="0"
     fi
@@ -231,10 +224,20 @@ _timer_stop() {
     # _timer_ready="1"
 }
 
-PROMPT_COMMAND="$PROMPT_COMMAND _timer_stop;"
+PROMPT_COMMAND+=("_timer_stop")
+
+# distrobox module
+_distrobox_show=""
+_distrobox_prompt() {
+    if [ -z "$CONTAINER_ID" ]; then
+        _distrobox_show=""
+    else
+        _distrobox_show="#${CONTAINER_ID}"
+    fi
+}
+PROMPT_COMMAND+=("_distrobox_prompt")
 
 # and finally
-PS0=""
 PS2="> "
 # select command prompt: PS3
 # execution trace: PS4
@@ -242,15 +245,16 @@ PS2="> "
 # update ps1 each time
 # this is hack because of: https://stackoverflow.com/questions/6592077/bash-prompt-and-echoing-colors-inside-a-function
 _update_ps1() {
-    PS1="\[\e[m\]${_PROMPT_COLOR}${_exit_status_color_and_number_show}[\t]${_PROMPT_COLOR} \h:$HPWD${_git_show}${_venv_show}${_timer_show}${_jobs_show} \$\[\e[m\] "
+    PS1="\[\e[m\]${_PROMPT_COLOR}${_exit_status_color_and_number_show}[\t]${_PROMPT_COLOR} \h${_distrobox_show}:$HPWD${_git_show}${_venv_show}${_timer_show}${_jobs_show} \$\[\e[m\] "
 }
-PROMPT_COMMAND="$PROMPT_COMMAND _update_ps1"
+PROMPT_COMMAND+=("_update_ps1")
 
 # hack to set _timer_ready after EVERYTHING including kitty shell integration
 _add_update_ps1() {
-    PROMPT_COMMAND="${PROMPT_COMMAND/;_add_update_ps1/}"
+    PROMPT_COMMAND=("${PROMPT_COMMAND[@]/_add_update_ps1/true}")
     PROMPT_COMMAND+=("_timer_ready=1")
     _timer_ready=1
+    PS0="\${_timer_start}"
 }
 # shellcheck disable=SC2178,SC2128
-PROMPT_COMMAND="$PROMPT_COMMAND;_add_update_ps1"
+PROMPT_COMMAND+=("_add_update_ps1")
