@@ -64,7 +64,7 @@ else
         echo "No music is playing"
     elif [ "$STATUS" = "Paused"  ]; then
         update_hooks "$PARENT_BAR_PID" 2
-        playerctl --player=$PLAYER metadata --format "$FORMAT"
+        playerctl --player=$PLAYER metadata --format "$FORMAT" | sed -e "s/[^[:space:]a-zA-Z0-9\-]//g"
     elif [ "$STATUS" = "No player is running"  ]; then
         echo "$STATUS"
     else
